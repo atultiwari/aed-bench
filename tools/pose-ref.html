@@ -47,6 +47,8 @@ const SPRITES = {
     hands: { R: { to: [96, 97, 96], shape: 'point', dir: [.62, -.74, .1] } } }]], opt: {} },
   // ERC 2025 "Using an AED": nobody touches the person while it analyses. Shirt open (pads on, drawn by code).
   A8c: { frame: 'fit', layer: 1, people: [['patient', {}], ['A_handsOff', { at: [60, 142] }]], opt: { shirtOpen: 1 } },
+  // Helper B, standing where Rescuer A points in A4 (her pointing line reaches about (158, 23) at 150 cm), facing her
+  B1: { frame: 'fit', people: [['B_stand', { at: [158, 20], facing: [-98, 130, 0], look: { pitch: 8 } }]], opt: {} },
 };
 const id = new URLSearchParams(location.search).get('sprite') || 'P1', SP = SPRITES[id], F = FRAMES[SP.frame] || null;
 const Q0 = new URLSearchParams(location.search);
