@@ -95,5 +95,35 @@
       1093
     ],
     "legsOverlap": 0.823
+  },
+  "A5": {
+    "file": "A5.webp",
+    "frame": "fit",
+    "replaces": "P1",
+    "from": "A5c",
+    "x": -133.67,
+    "y": 15.824,
+    "width": 226.283,
+    "height": 120.796,
+    "px": [
+      1524,
+      988
+    ],
+    "legsOverlap": 0.814
+  },
+  "A6": {
+    "file": "A6.webp",
+    "frame": "fit",
+    "replaces": "P1",
+    "from": "A5c, shoulders pushed down 38px over fixed hands, in code",
+    "x": -133.67,
+    "y": 15.824,
+    "width": 226.283,
+    "height": 120.796,
+    "px": [
+      1524,
+      988
+    ],
+    "legsOverlap": 0.814
   }
 }
