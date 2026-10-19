@@ -1,6 +1,8 @@
 # AED Bench
 
-**An interactive guide to using an AED.** Step by step, from finding an adult collapsed on the floor to opening the
+**An interactive guide to using an AED.** Live at **https://atultiwari.github.io/aed-bench/**
+
+ Step by step, from finding an adult collapsed on the floor to opening the
 AED, attaching the pads, standing clear for the shock and going straight back to CPR.
 
 For medical students and nurses, and for lay people at a CPR workshop.
