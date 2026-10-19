@@ -156,6 +156,39 @@ function aedPadsCode(L, lay) {
   return s;
 }
 
+// pads in pictures that do not show them (A8), and the cables from the pads to the AED's socket
+function aedPadsSprite(L, lay) {
+  const pads = AED_PADS[lay.people];
+  const showPads = pads && (L.key === 'analyse' || L.key === 'clear' || L.key === 'shock' || L.key === 'next' || L.key === 'plug' || L.key === 'chest2' || (L.key === 'pad2' && L.u > .5));
+  if (!pads) return '';
+  let s = '';
+  if (L.aedHere && showPads) {
+    const sock = aedAt(aedAedPoint('socket', lay.helper)), plugIn = L.key !== 'plug' || L.u > .6;
+    pads.forEach(p => { const a = aedAt(p), mid = [(a[0] + sock[0]) / 2, Math.max(a[1], sock[1]) + 14];
+      const end = plugIn ? sock : [sock[0] + 14, sock[1] + 6];
+      s += `<path d="M${f(a[0])} ${f(a[1])}Q${f(mid[0])} ${f(mid[1])} ${f(end[0])} ${f(end[1])}" fill="none" stroke="${INK}" stroke-width="1.6" stroke-linecap="round"/>`
+        + `<path d="M${f(a[0])} ${f(a[1])}Q${f(mid[0])} ${f(mid[1])} ${f(end[0])} ${f(end[1])}" fill="none" stroke="#e98a3c" stroke-width=".8" stroke-linecap="round"/>`; });
+    if (!plugIn) { const e = [sock[0] + 14, sock[1] + 6]; s += `<rect x="${f(e[0] - 2.5)}" y="${f(e[1] - 1.8)}" width="5" height="3.6" rx=".8" fill="#3d3935" stroke="${INK}" stroke-width=".5"/>`; }
+  }
+  if (lay.people === 'A8') {         // A8 shows the bare chest without pads: draw them where C17/B7 show them
+    const pad = ([x, y], rot) => { const [X, Y] = aedAt([x, y]); return `<rect x="${f(X - 4.6)}" y="${f(Y - 3.4)}" width="9.2" height="6.8" rx="1.2" fill="#f7f5ee" stroke="${INK}" stroke-width=".6" transform="rotate(${rot} ${f(X)} ${f(Y)})"/>`; };
+    s += pad(pads[0], -28) + pad(pads[1], 20);
+  }
+  return s;
+}
+function aedShockBolt2(a, b, now) {
+  const n = 7, pts = [];
+  for (let i = 0; i <= n; i++) { const t = i / n, jit = i % n ? Math.sin(now * 60 + i * 2.1) * 2.5 : 0; pts.push([a[0] + (b[0] - a[0]) * t + jit, a[1] + (b[1] - a[1]) * t - jit * .6]); }
+  const d = 'M' + pts.map(p => f(p[0]) + ' ' + f(p[1])).join('L');
+  return `<path d="${d}" fill="none" stroke="#ffe066" stroke-width="4" opacity=".6" stroke-linecap="round"/><path d="${d}" fill="none" stroke="#fffbe0" stroke-width="1.4" stroke-linecap="round"/>`;
+}
+function aedTimer2([X0, Y0], t) {
+  const k = INK_K, X = X0 - 46 * k, Y = Y0 + 16 * k, r = 9 * k, c = 2 * Math.PI * r, left = Math.ceil(AED.NUM.breathCheckMax * (1 - t));
+  return `<g><circle cx="${f(X)}" cy="${f(Y)}" r="${f(r)}" fill="#fffdf6" stroke="${INK}" stroke-width="1.1"/>`
+    + `<circle cx="${f(X)}" cy="${f(Y)}" r="${f(r)}" fill="none" stroke="var(--accent,#f4b829)" stroke-width="${f(2.6 * k)}" stroke-dasharray="${f(c * (1 - t))} ${f(c)}" transform="rotate(-90 ${f(X)} ${f(Y)})"/>`
+    + `<text x="${f(X)}" y="${f(Y + 3 * k)}" font-size="${f(8 * k)}" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-weight="800" fill="${INK}">${left} s</text></g>`;
+}
+
 /* ---------- the AED ---------- */
 function aedLidCorners(open) {
   const a = AEDB, ang = open * 110 * Math.PI / 180, W = a.x1 - a.x0, H = a.lidH;
@@ -263,7 +296,7 @@ function aedBubble(p3, text, accent) {
     + `<text x="${f(bx + w / 2)}" y="${f(by + h / 2 + fs * .36)}" font-size="${f(fs)}" text-anchor="middle" font-family="ui-rounded,system-ui,sans-serif" font-weight="700" fill="${INK}">${text}</text></g>`;
 }
 function aedRing(p3) { const [X, Y] = p3.length === 2 ? p3 : P(...p3);
-  return `<circle cx="${f(X)}" cy="${f(Y)}" r="${f(15 * INK_K)}" fill="none" stroke="var(--accent,#f4b829)" stroke-width="2.6" stroke-dasharray="${f(4 * INK_K)} ${f(3 * INK_K)}"/>`; }
+  const R = Math.max(15 * INK_K, 9); return `<circle cx="${f(X)}" cy="${f(Y)}" r="${f(R)}" fill="none" stroke="var(--accent,#f4b829)" stroke-width="${f(Math.max(2.6 * INK_K, 1.3))}" stroke-dasharray="${f(R * .27)} ${f(R * .2)}"/>`; }
 function aedShockBolt(now) {
   const a = P(89, 180, 23), b = P(119.6, 166, 12), n = 7, pts = [];
   for (let i = 0; i <= n; i++) { const t = i / n, jit = i % n ? Math.sin(now * 60 + i * 2.1) * 6 : 0;
@@ -338,7 +371,7 @@ function aedScene(st, now) {
 
   // tapes lie under everything that stands
   Object.keys(AED_TAPES).forEach(k => { s += aedTape(k, lit === k); });
-  if (L.scan >= 0) s += `<path d="${pd(on(PZ(M.h + .2), arcUV(100, 140, 130, -40, -40 + 360 * L.scan, 40)), false)}" fill="none" stroke="var(--accent,#f4b829)" stroke-width="2.4" stroke-dasharray="6 5"/>`;
+  if (L.scan >= 0) s += `<path d="${pd(on(PZ(M.h + .2), arcUV(90, 150, 75, -40, -40 + 360 * L.scan, 40)), false)}" fill="none" stroke="var(--accent,#f4b829)" stroke-width="2.4" stroke-dasharray="6 5"/>`;
   // the people are illustrations (aed-sprites.js); the code skeletons below are kept only as anchors
   const A = aedRescuer({ pos: AED.WORLD.rescuerA.knees, col: AED_C.A, hands: aedHandsA(L), look: L.A.look });
   const B = L.B.show ? aedRescuer({ pos: L.B.pos, col: AED_C.B, stand: L.B.stand, run: L.B.run, phase: now, hands: L.Bhands, carry: L.B.carry }) : null;
@@ -349,16 +382,39 @@ function aedScene(st, now) {
   if (!lay.front) s += helper + (lay.helper ? aedB8Cover(lay.helper, L.key) : '') + (lay.helper === 'B5idle' && !L.on ? aedScreenOff() : '');
   if (lay.a1) s += act('station', aedSpriteImg('A1'), 'data-k="rescuerA"');
   s += act('station', aedSpriteImg(lay.people, { jerk: L.jerk }), 'data-k="body"');
-  s += aedPadsCode(L, lay);
+  s += aedPadsSprite(L, lay);
   if (lay.front) s += helper;
   s += act('station', aedPhone(L, now), 'data-k="phone"');
-  if (L.flash > 0) s += aedShockBolt(now);
-  const headA = aedSpriteTop(lay.people === 'P1' && lay.a1 ? 'A1' : lay.people), headB = lay.helper ? aedSpriteTop(lay.helper, { at: lay.helperAt }) : null;
+  const pads = AED_PADS[lay.people] || [];
+  if (L.flash > 0 && pads.length === 2) s += aedShockBolt2(aedAt(pads[0]), aedAt(pads[1]), now);
+  const hd = AED_HEAD[lay.people] || {}, hb = lay.helper && AED_HEAD[lay.helper] ? AED_HEAD[lay.helper].B : null;
+  const headA = lay.a1 ? aedAt(AED_HEAD.A1.A) : hd.A ? aedAt(hd.A) : aedSpriteTop(lay.people);
+  const headB = hd.B ? aedAt(hd.B) : hb ? aedAt(hb) : lay.helper ? aedSpriteTop(lay.helper, { at: lay.helperAt }) : null;
   A.headAt2 = headA; if (B) B.headAt2 = headB;
   if (L.A.mode === 'handsup') s += aedBubble(headA, 'Hands off', true);
-  if (L.airwayRing >= 0) s += aedTimer([100, 207, 30], L.airwayRing);
+  if (L.airwayRing >= 0) s += aedTimer2(aedAt(AED_RING.airway), L.airwayRing);
   if (L.swap && headB) s += aedSwap2(headA, headB);
-  if (lit) s += aedRing(aedAnchor(L.key, L, A, B, lay));
-  if (L.bubble) s += aedBubble(aedBubbleAt(L.bubble.who, A, B, lay), L.bubble.text, L.bubble.who === 'AED');
-  return { svg: s, L, A, B };
+  if (lit) {
+    const onHead = h => h && [h[0], h[1] + 7 * INK_K];
+    const k = L.key, r = k === 'safe' ? onHead(headA) : (k === 'helper' || k === 'clear') ? onHead(headB) : k === 'call' ? P(...AED_PHONE, 2)
+      : k === 'plug' ? aedAt(aedAedPoint('socket', lay.helper)) : (k === 'analyse' || k === 'next') ? aedAt(aedAedPoint('screen', lay.helper))
+      : AED_RING[k] ? aedAt(AED_RING[k]) : null;
+    if (r) s += aedRing(r);
+    var focus = r;
+  }
+  if (L.bubble) {
+    const w = L.bubble.who, at = w === 'A' ? headA : w === 'B' ? headB : w === 'phone' ? P(...AED_PHONE, 4) : w === 'mouth' ? aedAt(AED_MOUTH[lay.people] || [-92, 113]) : aedAt(aedAedPoint('screen', lay.helper));
+    if (at) s += aedBubble(at, L.bubble.text, w === 'AED');
+  }
+  // ?grid=1: a grid in sprite units (the AED_SPR coordinates), for measuring anchors on the illustrations
+  if (new URLSearchParams(location.search).get('grid') === '1') {
+    const o = P(0, 0, 0); let g = '';
+    for (let x = -300; x <= 200; x += 10) g += `<path d="M${f(x + o[0])} ${f(-130 + o[1])}V${f(260 + o[1])}" stroke="${x % 50 ? '#ff9a9a' : '#d00'}" stroke-width="${x % 50 ? .15 : .35}"/>` + (x % 50 ? '' : `<text x="${f(x + o[0] + .5)}" y="${f(-126 + o[1])}" font-size="4" fill="#d00">${x}</text>`);
+    for (let y = -130; y <= 260; y += 10) g += `<path d="M${f(-300 + o[0])} ${f(y + o[1])}H${f(200 + o[0])}" stroke="${y % 50 ? '#9a9aff' : '#00d'}" stroke-width="${y % 50 ? .15 : .35}"/>` + (y % 50 ? '' : `<text x="${f(-298 + o[0])}" y="${f(y + o[1] - .5)}" font-size="4" fill="#00d">${y}</text>`);
+    s += `<g pointer-events="none">${g}</g>`;
+  }
+  // the phone camera's focus: the active ring, or the middle of the people picture
+  const pp = AED_SPR[lay.people], o0 = P(0, 0, 0);
+  const camAt = (typeof focus !== 'undefined' && focus) || [pp[0] + pp[2] / 2 + o0[0], pp[1] + pp[3] / 2 + o0[1]];
+  return { svg: s, L, A, B, camAt };
 }

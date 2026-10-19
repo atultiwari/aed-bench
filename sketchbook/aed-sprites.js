@@ -94,3 +94,33 @@ function aedSpriteTop(id, opt = {}) {
   const [x, y, w] = AED_SPR[id], [dx, dy] = aedSpriteShift(id, opt);
   return [x + dx + w / 2, y + dy];
 }
+
+/* ---------- anchors measured on the illustrations (scene units, the same frame as AED_SPR) ----------
+   Read off tools/sprite_grid.py renders. Everything that points at the picture (rings, bubbles, pads, the shock,
+   cables) uses these, never the old code skeleton. */
+// where the active-station ring goes, by station key (helper/safe use the moving sprites' tops instead)
+const AED_RING = {
+  start: [-43, 95], shoulders: [-80, 94], airway: [-86, 100], chest1: [-62, 93], lid: [-193, 172], power: [-143, 144],
+  bare: [-62, 93], pad1: [-75, 97], pad2: [-19, 115], plug: [-150, 163], analyse: [-177, 134], shock: [-159, 153],
+  chest2: [-46, 87], next: [-177, 134],
+};
+// the top of each person's head, per sprite (for speech bubbles); A = Rescuer A, B = Helper B
+const AED_HEAD = {
+  A1: { A: [-71, -12] },
+  A2: { A: [-83, 22] }, A3: { A: [-79, 42] }, A4: { A: [-80, -16] }, A5: { A: [-57, 12] }, A6: { A: [-57, 18] },
+  A7: { A: [-79, 42] }, A8: { A: [-65, -14] }, B6: { A: [-54, 6], B: [-104, 28] }, B6d: { A: [-54, 11], B: [-104, 28] },
+  B7: { A: [-38, 28], B: [-20, 56] }, B7d: { A: [-38, 32], B: [-20, 56] }, C17: { A: [-38, 14] }, C17d: { A: [-38, 18] },
+  B5: { B: [-179, 64] }, B5on: { B: [-179, 64] }, B5idle: { B: [-196, 52] }, B8: { B: [-190, 22] },
+};
+// the patient's mouth, per people sprite (for the '2 breaths' bubble)
+const AED_MOUTH = { A3: [-84, 90], A7: [-84, 90], A5: [-92, 113], A6: [-92, 113], C17: [-88, 106], C17d: [-88, 106] };
+// the pads on the patient, per people sprite: [x, y] centres. Sprites that show pads list them; A8 needs them drawn
+const AED_PADS = { B6: [[-75, 97]], B6d: [[-75, 97]], B7: [[-70, 107], [-19, 115]], B7d: [[-70, 107], [-19, 115]],
+  C17: [[-62, 92], [-17, 97]], C17d: [[-62, 92], [-17, 97]], A8: [[-50, 94], [-1, 101]] };
+// the AED's screen and its near-face socket, in the AED/B8 picture; the B5 family's AED sits 7 right, 4 down
+const AED_AED = { screen: [-177, 134], socket: [-150, 163] }, AED_B5_SHIFT = [7, 4];
+const aedAt = ([x, y]) => { const o = P(0, 0, 0); return [x + o[0], y + o[1]]; };
+function aedAedPoint(which, helper) {
+  const p = AED_AED[which], d = helper && helper.startsWith('B5') ? AED_B5_SHIFT : [0, 0];
+  return [p[0] + d[0], p[1] + d[1]];
+}

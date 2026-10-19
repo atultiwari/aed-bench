@@ -200,13 +200,10 @@ function aedCam(anchor) {
   }
   let target = aedVB0;
   if (aedIsPhone() && !st.benchView && anchor) {
-    const pts = [];
-    for (const dx of [-55, 55]) for (const dy of [-70, 70]) for (const z of [0, 60]) pts.push(P(anchor[0] + dx, anchor[1] + dy, z + Math.min(anchor[2], 60)));
-    const xs = pts.map(q => q[0]), ys = pts.map(q => q[1]);
-    let w = Math.max(...xs) - Math.min(...xs), h = Math.max(...ys) - Math.min(...ys);
-    const mx = (Math.max(...xs) + Math.min(...xs)) / 2, my = (Math.max(...ys) + Math.min(...ys)) / 2;
+    // a fixed-size window (scene units) around the focus point: the active part plus its neighbours
+    let w = 190, h = 150;
     if (w / h < aspect) w = h * aspect; else h = w / aspect;
-    target = { x: mx - w / 2, y: my - h / 2, w, h };
+    target = { x: anchor[0] - w / 2, y: anchor[1] - h / 2, w, h };
   } else if (aedIsPhone()) {
     const w = Math.max(aedVB0.w, aedVB0.h * aspect), h = w / aspect;
     target = { x: aedVB0.x + (aedVB0.w - w) / 2, y: aedVB0.y + (aedVB0.h - h) / 2, w, h };
@@ -266,7 +263,7 @@ ui = mountFigure({
 });
 const aedBaseRender = ui.render;
 ui.render = () => {
-  const anchor = aedLast && aedLast.L ? aedAnchor(aedLast.L.key, aedLast.L, aedLast.A, aedLast.B) : null;
+  const anchor = aedLast ? aedLast.camAt : null;
   aedCam(anchor); aedBaseRender(); aedSyncPanel();
   if (aedLast) aedDrawWindow(aedLast.L, aedNow());
 };
