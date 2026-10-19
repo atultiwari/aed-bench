@@ -17,3 +17,13 @@ Each file lists its model, prompt summary and job id, so it can be traced and re
 with the cast sheet's people and style. Text-only prompts and edits did not fix the technique.
 | **03-heart.png** | Heart alone, anterior view, transparent background: SVC into the right atrium, aorta behind the pulmonary trunk with three arch branches, LAA and pulmonary veins at upper right, LAD to the apex, RCA in the right AV groove, apex down and to the patient's left | GPT Image 2.5, high, 2k, transparent, ref 01 | 21483111-c4a3-495f-93ca-45b206eaaa81 |
 | **04-chest.png** | The patient, front view, bare chest, transparent background: collarbones, sternal notch, sternum line, costal margins, nipples, navel; arms out so the mid-axillary line shows. Heart and pads are placed on it by code (in the 1/2-scale preview: heart box 245 px at (338, 392); pad 1 centred near (385, 452), against the right sternal border; pad 2 at (604, 610), left mid-axillary line) | GPT Image 2.5, high, 2k, 4:5, transparent, ref 01 | f3fa1b8f-89f5-432f-8b84-a5feb85abe7b |
+
+## Pose sprites (item 4)
+
+Each sprite: a reference rendered from the posture-tested skeleton by `tools/pose-ref.html?sprite=<id>` (in `refs/`),
+redrawn by GPT Image 2.5 with the cast sheet (01), then registered by `tools/register_sprite.py` into
+`assets/sprites/<id>.webp` and `assets/sprites/sprites.json`.
+
+| Sprite | What | Job |
+|---|---|---|
+| P1 | The patient on his back, shirt closed (base layer) | f5aea166-4162-4abd-bf3e-50015ba8e285 (ref media c2b91684-a813-4a61-b84a-3cdeb00c0d08) |
