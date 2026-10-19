@@ -140,5 +140,20 @@
       806
     ],
     "legsOverlap": 0.89
+  },
+  "A8": {
+    "file": "A8.webp",
+    "frame": "fit",
+    "replaces": "P3",
+    "from": "A8c",
+    "x": -108.971,
+    "y": -14.593,
+    "width": 195.609,
+    "height": 147.891,
+    "px": [
+      1477,
+      1156
+    ],
+    "legsOverlap": 0.895
   }
 }
