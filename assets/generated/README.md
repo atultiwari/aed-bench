@@ -54,3 +54,4 @@ redrawn by GPT Image 2.5 with the cast sheet (01), then registered by `tools/reg
 | chest.webp, heart.webp | The window images, cropped from 04-chest and 03-heart | - |
 | **C17c → C17** | Station 17, CPR resumed after the shock: bare chest, both pads on, hands centred between them, arms straight. Aligned to P3 | f9549058-0254-49a9-a494-ef7c23619e11 (ref media 949b1297-f996-471d-935c-069122029fa0) |
 | **C17d** (code) | C17 with her shoulders pushed down 32 px over fixed hands | - |
+| **B5on** | Helper B pressing the green ON button (screen just lit, shock button unlit); edit of B5, same pose and framing | 71f1dfd8-4f40-4b90-b608-8a5324b888b5 |
