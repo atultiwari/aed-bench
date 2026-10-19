@@ -250,5 +250,35 @@
       992
     ],
     "legsOverlap": 0.825
+  },
+  "B7": {
+    "file": "B7.webp",
+    "frame": "fit",
+    "replaces": "P3",
+    "from": "B7c",
+    "x": -110.047,
+    "y": 25.189,
+    "width": 198.035,
+    "height": 147.106,
+    "px": [
+      1236,
+      1096
+    ],
+    "legsOverlap": 0.701
+  },
+  "B7d": {
+    "file": "B7d.webp",
+    "frame": "fit",
+    "replaces": "P3",
+    "from": "B7c, shoulders pushed down 30px over fixed hands, in code",
+    "x": -110.047,
+    "y": 25.189,
+    "width": 198.035,
+    "height": 147.106,
+    "px": [
+      1236,
+      1096
+    ],
+    "legsOverlap": 0.701
   }
 }

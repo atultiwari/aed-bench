@@ -69,6 +69,13 @@ const SPRITES = {
   B6c: { frame: 'fit', people: [['patient', {}], ['A_compress', {}],
     ['raw', { who: 'B', mode: 'kneel', at: [64, 220], facing: [28, -64, 0], sit: .1, look: { pitch: 35 }, hands: { R: { to: LM.padRight, shape: 'flat', dir: [1, 0, 0] } } }]],
     opt: { shirtOpen: 1 }, props: () => shape(on(PZ(LM.padRight[2] + .6), rrUV(LM.padRight[0] - 6, LM.padRight[1] - 8, LM.padRight[0] + 6, LM.padRight[1] + 8, 2)), '#f7f5ee', 1.2) },
+  // Pad 2 while compressions continue: Helper B moves round to the patient's left side, beside his chest, and presses
+  // pad 2 on the left mid-axillary line below the armpit. Pad 1 is already on.
+  B7c: { frame: 'fit', people: [['patient', {}], ['A_compress', {}],
+    ['raw', { who: 'B', mode: 'kneel', at: [164, 146], facing: [-1, 0, 0], chest: [138, 140, 64], look: { pitch: 45 },
+      hands: { R: { to: [LM.padLeft[0] + 3, LM.padLeft[1], LM.padLeft[2] + 4], shape: 'flat', dir: [-1, 0, 0] } } }]],
+    opt: { shirtOpen: 1 }, props: () => shape(on(PZ(LM.padRight[2] + .6), rrUV(LM.padRight[0] - 6, LM.padRight[1] - 8, LM.padRight[0] + 6, LM.padRight[1] + 8, 2)), '#f7f5ee', 1.2)
+      + shape(on(PX(LM.padLeft[0] + .5), rrUV(LM.padLeft[1] - 8, LM.padLeft[2] - 6, LM.padLeft[1] + 8, LM.padLeft[2] + 6, 2)), '#f7f5ee', 1.2) },
 };
 const id = new URLSearchParams(location.search).get('sprite') || 'P1', SP = SPRITES[id], F = FRAMES[SP.frame] || null;
 const Q0 = new URLSearchParams(location.search);
