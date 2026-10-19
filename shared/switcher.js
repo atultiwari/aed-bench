@@ -8,10 +8,12 @@
     tagline: "An interactive guide to using an AED",
     versions: [
       { dir: 'sketchbook', name: 'Sketchbook', hint: 'Hand-drawn 2D' },
-      { dir: 'turntable', name: 'Turntable', hint: 'Rotate in 3D' },
-      { dir: 'working-model', name: 'Working Model', hint: 'Every number from one model' },
     ],
+    // in progress, not shown: their pages send visitors to the Sketchbook (add ?preview=1 to open them anyway)
+    hidden: ['turntable', 'working-model'],
   };
+  const hiddenHere = SITE.hidden.find(d => location.pathname.includes(`/${d}/`));
+  if (hiddenHere && !new URLSearchParams(location.search).has('preview')) { location.replace('../sketchbook/'); return; }
   const here = SITE.versions.find(v => location.pathname.includes(`/${v.dir}/`)) || SITE.versions[0];
   const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
 

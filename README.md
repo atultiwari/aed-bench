@@ -7,20 +7,28 @@ AED, attaching the pads, standing clear for the shock and going straight back to
 
 For medical students and nurses, and for lay people at a CPR workshop.
 
-## Three versions of the same steps
+## What it shows
 
-Switch between them with the bar at the top of every page.
+An illustrated floor scene: an adult collapsed on a mat, a rescuer and a helper. Seven steps take them through 18
+stations: check and call, CPR, opening and switching on the AED, attaching the pads, hands off while it analyses,
+"Everyone clear!" and the shock, then straight back to CPR. Press Play, press a step, or tap the next part of the
+scene.
 
-| Version | What it is |
-|---|---|
-| **Sketchbook** | A hand-drawn isometric floor scene. Tap the steps, the parts or the station tapes; the heart and the AED's reading change with each step. |
-| **Turntable** | The same scene in 3D. Drag to turn it, pinch to zoom, view it from any side or full screen. |
-| **Working Model** | A precise isometric scene where every number on screen (scenario clock, compressions, hands-off time, compression fraction) comes from one small model of the 18 stations. |
+- A window beside the scene shows the heart behind the chest: quivering in ventricular fibrillation, squeezed by
+  each push, and crossed by the current at the shock. Under it is a strip of what the AED is reading.
+- The scenario clock runs to 4 min 37 s, with counters for compressions and hands-off time.
+- A "30:2 / Compressions only" switch shows the difference between trained and untrained rescuers.
+- Each step has a short "For clinicians" note.
+- It works on laptops and phones; on a phone the view follows the action up close.
 
-All three share one spec and one data file, so the stations, names and times never drift apart: 7 steps, 18 stations,
-a scenario clock of 4 min 37 s. A "30:2 / Compressions only" switch shows the difference between trained and
-untrained rescuers, and each step has a short "For clinicians" note. Pages work on laptops and phones; on a phone the
-view follows the action up close.
+The people, the AED and the heart are illustrations generated with Higgsfield (GPT Image 2.5 and Nano Banana Pro).
+Each pose was first drawn from a skeleton checked against the ERC 2025 technique (shoulders over the hands, arms
+straight, hands on the lower half of the sternum), then redrawn in the illustration style and reviewed. Every image,
+its prompt reference and its job id are listed in [assets/generated/README.md](assets/generated/README.md).
+
+**In progress, not yet published:** a rotatable 3D version (`turntable/`) and a model-driven version
+(`working-model/`). Their pages currently redirect to the main page; open them with `?preview=1` to see the
+unfinished state.
 
 ## Sources
 
@@ -45,19 +53,22 @@ the AED's voice.
 | Path | What |
 |---|---|
 | `docs/spec.md` | The approved spec: steps, stations, times, sources |
-| `docs/scene.md` | What every style draws, station by station |
-| `shared/aed-spec.js` | The spec as data, read by all three pages |
-| `sketchbook/`, `turntable/`, `working-model/` | One folder per style |
+| `docs/scene.md` | What the scene shows, station by station |
+| `shared/aed-spec.js` | The spec as data |
+| `shared/aed-people.js`, `tests/` | The posture-tested skeleton used to pose every illustration |
+| `sketchbook/` | The page |
+| `assets/sprites/`, `assets/generated/` | The illustrations, and the record of how each was made |
+| `tools/` | Pose references, sprite registration, edge cleaning |
+| `turntable/`, `working-model/` | In progress, not linked |
 
 ## Run it
 
 ```bash
 python3 -m http.server 8000             # from this folder, then open http://localhost:8000/
-node working-model/src/build.mjs        # rebuilds working-model/index.html after editing working-model/src
-node --test working-model/src/*.test.mjs
+node --test tests/*.test.mjs            # posture tests for the skeleton
 ```
 
-Built with the Pradarshan skill. Three.js is loaded from jsDelivr (pinned to 0.160.0).
+Built with the Pradarshan skill.
 
 ## Credits
 

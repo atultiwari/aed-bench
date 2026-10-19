@@ -270,8 +270,8 @@ ui.render = () => {
 aedBuildPanel();
 aedBuildPhone();
 aedPlaceChip();
-document.querySelector('header h1').textContent = 'Using an AED · Sketchbook';
-document.title = 'Using an AED · Sketchbook';
+document.querySelector('header h1').textContent = 'Using an AED';
+document.title = 'AED Bench · Using an AED';
 if (st.step) aedNote(`After step ${st.step}`, AED.STEPS[st.step - 1].done, AED.STEPS[st.step - 1]);
 else aedNote('Ready', 'An adult has collapsed on the floor. Press Play, press a step, or tap the SAFE? tape to begin.');
 if (st.mode !== '30:2') document.getElementById('aedMcco').click();
