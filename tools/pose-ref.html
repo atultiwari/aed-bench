@@ -27,6 +27,8 @@ const SPRITES = {
   P1: { frame: 'patient', people: [['patient', {}]], opt: { shirtOpen: 0 } },
   P2: { frame: 'patient', people: [['patient', { tilt: 1 }]], opt: { shirtOpen: 0 } },
   P3: { frame: 'patient', people: [['patient', {}]], opt: { shirtOpen: 1 } },
+  // Rescuer A kneels on the far side, level with the lower sternum (knees at x 60, y 150)
+  A1: { frame: 'A', people: [['A_kneel', { at: [60, 150], look: { yaw: 0, pitch: 28 } }]], opt: {} },
 };
 const id = new URLSearchParams(location.search).get('sprite') || 'P1', SP = SPRITES[id], F = FRAMES[SP.frame];
 const corners = [];
@@ -37,7 +39,7 @@ const q = corners.map(c => P(...c)), xs = q.map(v => v[0]), ys = q.map(v => v[1]
 let x0 = Math.min(...xs), y0 = Math.min(...ys), w = Math.max(...xs) - x0, h = Math.max(...ys) - y0;
 if (w / h < 1.5) { const W2 = h * 1.5; x0 -= (W2 - w) / 2; w = W2; } else { const H2 = w / 1.5; y0 -= (H2 - h) / 2; h = H2; }
 OX = -x0; OY = -y0;
-const parts = SP.people.flatMap(([who, o]) => pplPerson(PP.solve(PP.POSES[who === 'patient' ? 'patient' : who](o)), SP.opt));
+const parts = SP.people.flatMap(([pose, o]) => pplPerson(PP.solve(PP.POSES[pose](o)), SP.opt));
 const PX_PER_UNIT = 1536 / w;
 document.getElementById('out').innerHTML = `<svg width="${(w * PX_PER_UNIT / 2).toFixed(0)}" height="${(h * PX_PER_UNIT / 2).toFixed(0)}" viewBox="0 0 ${w.toFixed(2)} ${h.toFixed(2)}">${byDepth(parts)}</svg>`;
 // where this frame sits in the scene projection (P with OX = OY = 0, RC as above): add these to place the sprite

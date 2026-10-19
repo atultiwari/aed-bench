@@ -29,3 +29,4 @@ redrawn by GPT Image 2.5 with the cast sheet (01), then registered by `tools/reg
 | P1 | The patient on his back, shirt closed (base layer) | f5aea166-4162-4abd-bf3e-50015ba8e285 (ref media c2b91684-a813-4a61-b84a-3cdeb00c0d08) |
 | P2 | Head tilt and chin lift: head back, neck extended, chin up, mouth open; body aligned to P1 (overlap 0.96) | 575acc46-9dbc-4297-998c-b7c419daa40d (refs P1 job + media 272164a0-2c1d-4f2c-b965-f82f0908aa48) |
 | P3 | Shirt fully open, chest bare from collarbones to belt and to the left lateral chest (pad 2 site); sternum, nipples, rib margin, navel; aligned to P1 | 92a6209f-ed5d-44cf-8cda-20c7ab6e0b57 (refs P1 job, media 5c6e0ffc-2af3-4be4-aad6-ba2e12887fee, chest 04) |
+| A1 | Rescuer A kneeling upright beside the chest (far side), hands on thighs, looking at him | 8f558a86-94df-4990-a753-d266543ae195 (ref media 1913ef85-5b0a-4bb4-95ff-34624d89b64a) |

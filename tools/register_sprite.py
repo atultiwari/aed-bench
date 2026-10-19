@@ -1,12 +1,13 @@
 """Register a generated sprite to its pose reference and write the web sprite.
 
-python3 tools/register_sprite.py <id> '<SPRITE_META json from tools/pose-ref.html>' [like=<id> region=x0,y0,x1,y1]
+python3 tools/register_sprite.py <id> '<SPRITE_META json from tools/pose-ref.html>' [like=<id> region=x0,y0,x1,y1] [anchor=bottom]
 
 The image model keeps the reference's composition but drifts a few percent in size and position. This fits the
 sprite's opaque bounding box onto the reference figure's bounding box, trims the sprite, saves it as WebP in
 assets/sprites/<id>.webp, and records where it goes in scene units (Sketchbook projection, OX = OY = 0) in
 assets/sprites/sprites.json, so the page draws it with one <image x y width height>.
-With like=<id>, the sprite is aligned to an approved sprite of the same person instead (best overlap of the parts
+With anchor=bottom (kneeling and standing people), the sprite keeps its own shape: one uniform scale, placed with its
+knees or feet on the reference's floor line. With like=<id>, the sprite is aligned to an approved sprite of the same person instead (best overlap of the parts
 that do not move, given as a region in fractions of the image), so swapping between them does not make the body jump.
 Needs Pillow.
 """
@@ -60,7 +61,8 @@ def align_to(gen: Image.Image, like: Image.Image, region: tuple[float, ...]) -> 
     return best
 
 
-def main(sprite_id: str, meta_json: str, like_id: str | None = None, region: tuple[float, ...] | None = None) -> None:
+def main(sprite_id: str, meta_json: str, like_id: str | None = None, region: tuple[float, ...] | None = None,
+         anchor: str = 'box') -> None:
     meta = json.loads(meta_json)
     gen = Image.open(GEN / f'{sprite_id}.png').convert('RGBA')
     ref = Image.open(REF / f'{sprite_id}.png').convert('RGBA')
@@ -73,6 +75,12 @@ def main(sprite_id: str, meta_json: str, like_id: str | None = None, region: tup
         'x': round(meta['originX'] + rb[0] * ux, 3), 'y': round(meta['originY'] + rb[1] * uy, 3),
         'width': round((rb[2] - rb[0]) * ux, 3), 'height': round((rb[3] - rb[1]) * uy, 3),
     }
+    if anchor == 'bottom':
+        # keep the sprite's own shape: one scale (the mean of the two fits), feet or knees on the reference's floor line
+        k = (((rb[2] - rb[0]) / (gb[2] - gb[0])) * ((rb[3] - rb[1]) / (gb[3] - gb[1]))) ** .5
+        w, h = (gb[2] - gb[0]) * k * ux, (gb[3] - gb[1]) * k * uy
+        cx, bottom = meta['originX'] + (rb[0] + rb[2]) / 2 * ux, meta['originY'] + rb[3] * uy
+        place = {'x': round(cx - w / 2, 3), 'y': round(bottom - h, 3), 'width': round(w, 3), 'height': round(h, 3)}
     stretch = ((rb[2] - rb[0]) / (gb[2] - gb[0])) / ((rb[3] - rb[1]) / (gb[3] - gb[1]))
     if like_id:
         book0 = json.loads((OUT / 'sprites.json').read_text())[like_id]
@@ -100,4 +108,4 @@ def main(sprite_id: str, meta_json: str, like_id: str | None = None, region: tup
 if __name__ == '__main__':
     opts = dict(a.split('=', 1) for a in sys.argv[3:])
     reg = tuple(float(v) for v in opts['region'].split(',')) if 'region' in opts else None
-    main(sys.argv[1], sys.argv[2], opts.get('like'), reg)
+    main(sys.argv[1], sys.argv[2], opts.get('like'), reg, opts.get('anchor', 'box'))
