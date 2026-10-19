@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Using an AED · Sketchbook</title>
+<meta name="description" content="AED Bench: an interactive guide to using an AED on a collapsed adult, step by step, from ERC 2025 and AHA 2025 adult BLS guidelines.">
+<script src="../shared/switcher.js" defer></script>
+</head>
+<body>
+<script>
+  // any script error is recorded on <html data-errors>, so the device checks can see it
+  addEventListener('error', e => { document.documentElement.dataset.errors = (document.documentElement.dataset.errors || '') + ' ' + e.message + ';'; });
+</script>
+<script src="engine.js"></script>
+<script src="../shared/aed-spec.js"></script>
+<script src="aed-look.js"></script>
+<script src="aed-draw.js"></script>
+<script src="aed-window.js"></script>
+<script src="aed-app.js"></script>
+<script src="aed-ui.js"></script>
+</body>
+</html>

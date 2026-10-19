@@ -1,0 +1,8 @@
+*.log
+*.pdf
+.DS_Store
+_shots/
+_videos/
+frames/
+node_modules/
+shots/
