@@ -56,6 +56,14 @@ const SPRITES = {
   B4: { frame: 'fit', people: [['raw', { who: 'B', mode: 'run', at: [10, 290], facing: [.19, -.98, 0], phase: .9, look: { pitch: 6 },
     hands: { R: { to: [-10, 285, 64], shape: 'grip' } } }]], opt: {},
     props: () => box(-16, 269, 30, -4, 301, 60, matOf('#2f9e5b'), toneI, 1.1) + box(-12, 279, 60, -8, 291, 64, matOf('#3d3935'), toneI, .9) },
+  // Helper B kneeling beyond the patient's head at the open AED (case at x 36-80, y 222-266 as in the Sketchbook),
+  // pressing the SHOCK button with his right hand
+  B5: { frame: 'fit', people: [['B_reach', { at: [16, 248], to: [67, 254, 13.5] }]], opt: {},
+    props: () => box(36, 222, 0, 80, 266, 12, matOf('#2f9e5b'), toneI, 1.1)
+      + shape(on(PZ(12.05), rrUV(39, 225, 77, 263, 3)), '#55504a', .8) + shape(on(PZ(12.1), rrUV(40, 229, 57, 262, 2)), '#203a2c', .7)
+      + cyl(68, 231, 12, 13.4, 3.6, matOf('#5fe08a'), toneI, .9) + cyl(67, 254, 12, 13.4, 4.4, matOf('#f08c00'), toneI, .9)
+      + box(36, 268, 0, 80, 312, 4, matOf('#2f9e5b'), toneI, 1.1),
+    propBox: [[36, 222, 0], [80, 312, 14]] },
 };
 const id = new URLSearchParams(location.search).get('sprite') || 'P1', SP = SPRITES[id], F = FRAMES[SP.frame] || null;
 const Q0 = new URLSearchParams(location.search);
@@ -64,6 +72,7 @@ const solved = SP.people.map(([pose, o]) => PP.solve(pose === 'raw' ? o : PP.POS
 const corners = [];
 if (SP.frame === 'fit') solved.forEach(p => Object.values(p.J).forEach(j => { for (const dx of [-20, 20]) for (const dy of [-20, 20]) for (const dz of [-4, 18]) corners.push([j[0] + dx, j[1] + dy, Math.max(0, j[2] + dz)]); }));
 else for (const x of F.x) for (const y of F.y) for (const z of F.z) corners.push([x, y, z]);
+if (SP.propBox) { const [a, b] = SP.propBox; for (const x of [a[0], b[0]]) for (const y of [a[1], b[1]]) for (const z of [a[2], b[2]]) corners.push([x, y, z]); }
 RC = [0, 0]; OX = OY = 0;   // VIEW 0: RC has no effect; the scene uses the same projection
 const q = corners.map(c => P(...c)), xs = q.map(v => v[0]), ys = q.map(v => v[1]);
 // pad the frame to exactly 3:2 (the image model's aspect), centred, so a generated image maps back by scale alone
