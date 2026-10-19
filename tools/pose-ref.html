@@ -76,6 +76,15 @@ const SPRITES = {
       hands: { R: { to: [LM.padLeft[0] + 3, LM.padLeft[1], LM.padLeft[2] + 4], shape: 'flat', dir: [-1, 0, 0] } } }]],
     opt: { shirtOpen: 1 }, props: () => shape(on(PZ(LM.padRight[2] + .6), rrUV(LM.padRight[0] - 6, LM.padRight[1] - 8, LM.padRight[0] + 6, LM.padRight[1] + 8, 2)), '#f7f5ee', 1.2)
       + shape(on(PX(LM.padLeft[0] + .5), rrUV(LM.padLeft[1] - 8, LM.padLeft[2] - 6, LM.padLeft[1] + 8, LM.padLeft[2] + 6, 2)), '#f7f5ee', 1.2) },
+  // "Everyone clear!" (ERC 2025 Fig. 7: follow the AED; make sure nobody touches the person): Helper B kneels upright
+  // at the AED, his left arm sweeping out over the patient, looking along the body; his right hand waits by the button
+  B8: { frame: 'fit', people: [['raw', { who: 'B', mode: 'kneel', at: [16, 248], facing: [1, -.35, 0], chest: [24, 246, 88], look: { pitch: 8, yaw: -25 },
+    hands: { L: { to: [58, 205, 92], shape: 'open' } } }]], opt: {},
+    props: () => box(36, 222, 0, 80, 266, 12, matOf('#2f9e5b'), toneI, 1.1)
+      + shape(on(PZ(12.05), rrUV(39, 225, 77, 263, 3)), '#55504a', .8) + shape(on(PZ(12.1), rrUV(40, 229, 57, 262, 2)), '#203a2c', .7)
+      + cyl(68, 231, 12, 13.4, 3.6, matOf('#5fe08a'), toneI, .9) + cyl(67, 254, 12, 13.4, 4.4, matOf('#ffd36a'), toneI, .9)
+      + box(36, 268, 0, 80, 312, 4, matOf('#2f9e5b'), toneI, 1.1),
+    propBox: [[36, 222, 0], [80, 312, 14]] },
 };
 const id = new URLSearchParams(location.search).get('sprite') || 'P1', SP = SPRITES[id], F = FRAMES[SP.frame] || null;
 const Q0 = new URLSearchParams(location.search);
