@@ -263,7 +263,7 @@
     const { J, D, body } = p, at = t => V.lerp(J.pelvis, J.chest, t), front = J.pelvis[2] + D.torso.chest[1] * .96;
     const R = D.headR, head = J.head;
     return {
-      sternumLow: [...at(.6).slice(0, 2), front],                                  // lower half of the sternum
+      sternumLow: [...at(.78).slice(0, 2), front],                                 // lower half of the sternum, 'centre of the chest' (nipple line)
       padRight: V.add([...at(.9).slice(0, 2), front - .6], V.mul(body.r, 8.5)),     // below the right collarbone
       padLeft: V.add([...at(.68).slice(0, 2), J.pelvis[2] + 1], V.mul(body.r, -D.torso.chest[0] - .4)),  // left mid-axillary line
       forehead: V.add(head, V.add(V.mul(body.face, R * .62), V.mul(body.headUp, R * .62))),

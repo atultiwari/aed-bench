@@ -75,18 +75,18 @@ function pplTorso(p, opt) {
   const { J, D, body, cast } = p, s = body.s, u = body.r, v = body.f, T = D.torso;
   const S = (c, [a, b], k = 1) => ({ c, u, v, a: a * k, b: b * k });
   const at = t => PV.add(J.pelvis, PV.mul(s, D.spine * t));
-  const low = [S(at(-.16), T.hip, .84), S(at(-.07), T.hip, .97), S(at(0), T.hip), S(at(.2), [(T.hip[0] + T.waist[0]) / 2, (T.hip[1] + T.waist[1]) / 2]), S(at(.38), T.waist)];
-  const high = [S(at(.38), T.waist, 1.04), S(at(.56), [(T.waist[0] + T.chest[0]) / 2, (T.waist[1] + T.chest[1]) / 2], 1.03), S(at(.74), T.chest, 1.02),
+  const low = [S(at(-.16), T.hip, .84), S(at(-.07), T.hip, .97), S(at(0), T.hip), S(at(.12), [(T.hip[0] + T.waist[0]) / 2, (T.hip[1] + T.waist[1]) / 2]), S(at(.22), T.waist)];
+  const high = [S(at(.22), T.waist, 1.04), S(at(.48), [(T.waist[0] + T.chest[0]) / 2, (T.waist[1] + T.chest[1]) / 2], 1.03), S(at(.74), T.chest, 1.02),
     S(at(.92), T.shoulder, 1.02), S(at(1.0), T.shoulder, .94), S(at(1.06), T.shoulder, .62)];
   const parts = [{ at: at(.18), svg: pplTube(low, pplTones(cast.bottom), 1.3) }];
   let top = pplTube(high, pplTones(cast.top), 1.35);
-  const front = t => { const c = at(t), k = t < .5 ? T.waist[1] : t < .85 ? T.chest[1] : T.shoulder[1]; return PV.add(c, PV.mul(v, k * 1.04)); };
+  const front = t => { const c = at(t), k = t < .4 ? T.waist[1] : t < .85 ? T.chest[1] : T.shoulder[1]; return PV.add(c, PV.mul(v, k * 1.04)); };
   if (cast.topStyle === 'shirt') {
     const o = opt.shirtOpen || 0;
     if (o > 0) top += pplOpenShirt(p, o, at, front);
     else {
-      top += pplLine([front(.42), front(.6), front(.78), front(.95)], .9);                       // the button placket
-      [.5, .66, .82].forEach(t => { const [X, Y] = P(...PV.add(front(t), PV.mul(u, 1.6))); top += `<circle cx="${pplF(X)}" cy="${pplF(Y)}" r=".9" fill="${INK}"/>`; });
+      top += pplLine([front(.26), front(.5), front(.75), front(.95)], .9);                       // the button placket
+      [.36, .56, .76].forEach(t => { const [X, Y] = P(...PV.add(front(t), PV.mul(u, 1.6))); top += `<circle cx="${pplF(X)}" cy="${pplF(Y)}" r=".9" fill="${INK}"/>`; });
     }
     top += pplCollar(p, at, 'shirt');
   } else top += pplCollar(p, at, cast.topStyle);

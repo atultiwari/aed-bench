@@ -50,6 +50,11 @@ test('helper B can reach the AED buttons from a kneel', () => {
   assert.ok(P.posture(p).handsReached, 'a hand falls short of its target');
 });
 
+test('the hands go on the centre of the chest: lower half of the sternum, not the belly', () => {
+  const sp = patient.J.chest[1] - patient.J.pelvis[1], t = (LM.sternumLow[1] - patient.J.pelvis[1]) / sp;
+  assert.ok(t > .7 && t < .86, `hand point at ${(t * 100).toFixed(0)}% of the way from the hips to the shoulders`);
+});
+
 test('the patient lies flat: pelvis, chest and head all near the floor', () => {
   for (const j of ['pelvis', 'chest', 'head']) assert.ok(patient.J[j][2] < 16, `${j} at ${patient.J[j][2].toFixed(1)} cm`);
   assert.ok(LM.padRight[0] < 100 && LM.padLeft[0] > 100, "right pad on the patient's right (-x), left pad on the left (+x)");
