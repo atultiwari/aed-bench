@@ -49,6 +49,9 @@ const SPRITES = {
   A8c: { frame: 'fit', layer: 1, people: [['patient', {}], ['A_handsOff', { at: [60, 142] }]], opt: { shirtOpen: 1 } },
   // Helper B, standing where Rescuer A points in A4 (her pointing line reaches about (158, 23) at 150 cm), facing her
   B1: { frame: 'fit', people: [['B_stand', { at: [158, 20], facing: [-98, 130, 0], look: { pitch: 8 } }]], opt: {} },
+  // Helper B running off to fetch the AED: away from the patient, toward the upper right (-y), two frames of the cycle
+  B2: { frame: 'fit', people: [['B_run', { at: [158, -10], facing: [0, -1, 0], phase: Math.PI / 2 }]], opt: {} },
+  B3: { frame: 'fit', people: [['B_run', { at: [158, -10], facing: [0, -1, 0], phase: -Math.PI / 2 }]], opt: {} },
 };
 const id = new URLSearchParams(location.search).get('sprite') || 'P1', SP = SPRITES[id], F = FRAMES[SP.frame] || null;
 const Q0 = new URLSearchParams(location.search);

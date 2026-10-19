@@ -40,3 +40,6 @@ redrawn by GPT Image 2.5 with the cast sheet (01), then registered by `tools/reg
 | **A7c → A7** | Rescue breath (ERC Fig. 7 "Combine rescue breathing"): head tilt kept, nose pinched, chin lifted, lips sealed over his mouth. Edited from A3 so the pose matches; aligned to P1 | 00577086-8ac2-4b16-8f64-3642bc8788de (refs A3 job, media e7c39bc7-b7d4-43f2-9a68-857f890ec070) |
 | **A8c → A8** | Hands off while the AED analyses (ERC 2025 "Using an AED": nobody touches the person): kneeling upright, palms raised clear; shirt open, pads drawn by code. Aligned to P3 | 8f36b3d9-27d3-4ede-9ca6-b39c3fb14acf (ref media 3aeb511e-ccb2-4e97-ade2-c092758cf0de) |
 | **B1** | Helper B standing beyond the patient's feet, where Rescuer A points in A4, turned to face her | 5e1e9dc6-e1db-42e7-9a6b-62b0da69ba6e (ref media 7a910375-bc98-45a3-913c-dc7a910cd2c5) |
+| **B2** | Running off to fetch the AED, frame 1 (stride, seen from behind, heading to the upper right) | fd2c443b-289e-4dcf-aa92-1a4fe4173ac5 (ref media 05c2148f-0b79-40fd-81ee-bf915f029f5c) |
+| B3-try1 | Run frame 2, first try: copied B2's stride. **Rejected** | 97b70a21-13c3-40fe-8647-93771743d4be |
+| **B3** | Run frame 2 (passing phase, arms swapped); alternates with B2 | d1afa95d-1017-4209-b5e4-b4a254f0019f (ref media 0ad90468-806f-4c61-89f6-01b2bd62ea38) |
