@@ -50,5 +50,20 @@
       926
     ],
     "stretch": 1.067
+  },
+  "A2": {
+    "file": "A2.webp",
+    "frame": "fit",
+    "replaces": "P1",
+    "from": "A2c",
+    "x": -140.864,
+    "y": 13.335,
+    "width": 232.033,
+    "height": 123.068,
+    "px": [
+      1663,
+      988
+    ],
+    "legsOverlap": 0.889
   }
 }
