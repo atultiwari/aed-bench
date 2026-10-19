@@ -13,6 +13,7 @@ const AED_SPR = {
   B1: [93.608, -97.454, 40.36, 196.956], B2: [105.989, -105.909, 92.735, 175.217], B3: [102.001, -106.915, 94.813, 185.317],
   B4: [-278.69, -25.934, 88.972, 170.881], B5: [-251.287, 60.589, 128.948, 135.411], B6: [-183.791, 5.112, 270.591, 132.626],
   B6d: [-183.791, 5.112, 270.591, 132.626], B7: [-110.047, 25.189, 198.035, 147.106], B7d: [-110.047, 25.189, 198.035, 147.106],
+  C17: [-118.233, 15.137, 209.097, 111.6], C17d: [-118.233, 15.137, 209.097, 111.6],
   B8: [-262.471, 21.354, 140.184, 174.646], AED: [-246.152, 122.979, 123.865, 73.021],
 };
 // the AED sprite's shock button (centre x, y and radii, scene units): covered unless a shock is advised
@@ -23,7 +24,7 @@ const AED_SPR_AT = { B2: [158, -10, 0], B3: [158, -10, 0], B4: [10, 290, 0] };
 const AED_SPR_HAS_AED = new Set(['B5', 'B8']);
 // the B8 sprite shows the shock button lit: true only from 'shock advised' until the shock
 const AED_SPR_LIT_OK = new Set(['clear']);
-const AED_SPR_PADS = { B6: [1], B6d: [1], B7: [1, 2], B7d: [1, 2] };
+const AED_SPR_PADS = { B6: [1], B6d: [1], B7: [1, 2], B7d: [1, 2], C17: [1, 2], C17d: [1, 2] };
 
 /* which sprites a moment shows: { people: id, helper: id|null, helperAt: [x,y,z]|null, aedCode: bool } */
 function aedSpriteLayers(L, now) {
@@ -51,8 +52,9 @@ function aedSpriteLayers(L, now) {
     case 'pad2': case 'plug': lay.people = push ? 'B7d' : 'B7'; lay.helper = null; break;
     case 'analyse': case 'clear': case 'next': lay.people = 'A8'; lay.helper = 'B8'; lay.front = false; break;
     case 'shock': lay.people = 'A8'; lay.helper = 'B5'; lay.front = false; break;
-    // PLACEHOLDER until a "compressions on the bare chest with both pads on" image exists: shirt-closed frames
-    case 'chest2': lay.people = push ? 'A6' : 'A5'; lay.helper = 'B5'; lay.front = false; lay.placeholder = true; break;
+    // CPR straight after the shock: bare chest, both pads on. The helper is not drawn: no image yet shows him
+    // kneeling at the AED without pressing a button (B5 presses SHOCK, which would be wrong during CPR)
+    case 'chest2': lay.people = push ? 'C17d' : 'C17'; lay.helper = null; break;
   }
   lay.aedCode = L.aedHere && !(lay.helper && AED_SPR_HAS_AED.has(lay.helper));
   lay.padsInImage = AED_SPR_PADS[lay.people] || [];

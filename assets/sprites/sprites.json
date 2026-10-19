@@ -312,5 +312,35 @@
       5.875,
       3.162
     ]
+  },
+  "C17": {
+    "file": "C17.webp",
+    "frame": "fit",
+    "replaces": "P3",
+    "from": "C17c",
+    "x": -118.233,
+    "y": 15.137,
+    "width": 209.097,
+    "height": 111.6,
+    "px": [
+      1460,
+      1016
+    ],
+    "legsOverlap": 0.77
+  },
+  "C17d": {
+    "file": "C17d.webp",
+    "frame": "fit",
+    "replaces": "P3",
+    "from": "C17c, shoulders pushed down 32px over fixed hands, in code",
+    "x": -118.233,
+    "y": 15.137,
+    "width": 209.097,
+    "height": 111.6,
+    "px": [
+      1460,
+      1016
+    ],
+    "legsOverlap": 0.77
   }
 }

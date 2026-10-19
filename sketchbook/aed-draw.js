@@ -149,7 +149,7 @@ function aedPadsAndCables(L) {
 
 // pads and cables, when the picture does not already show them
 function aedPadsCode(L, lay) {
-  if (lay.people === 'B6' || lay.people === 'B6d' || lay.people === 'B7' || lay.people === 'B7d') return '';
+  if (AED_SPR_PADS[lay.people]) return '';
   const show = lay.people === 'A8' || L.key === 'shock' || L.key === 'next';
   if (!show) return '';
   let s = aedPadFlat([89, 180, 22]) + aedPadSide();
@@ -360,6 +360,5 @@ function aedScene(st, now) {
   if (L.swap && headB) s += aedSwap2(headA, headB);
   if (lit) s += aedRing(aedAnchor(L.key, L, A, B, lay));
   if (L.bubble) s += aedBubble(aedBubbleAt(L.bubble.who, A, B, lay), L.bubble.text, L.bubble.who === 'AED');
-  if (lay.placeholder) s += `<text x="${f(P(100, 60, 0)[0])}" y="${f(P(100, 60, 0)[1] + 30)}" font-size="7" fill="#b3261e" font-family="ui-monospace,Menlo,monospace">placeholder: bare-chest CPR image pending</text>`;
   return { svg: s, L, A, B };
 }
