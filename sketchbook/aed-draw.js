@@ -308,7 +308,7 @@ function aedHandsA(L) {
 function aedAnchor(key, L, A, B, lay) {
   const a = AEDB;
   switch (key) {
-    case 'lid': return L.aedHere ? aedLidPoint(L.lid, 22, 22) : B.headAt;
+    case 'lid': { const o = P(0, 0, 0); return L.aedHere ? [-205.4 + o[0], 172.3 + o[1]] : (B && B.headAt2) || B.headAt; }   // the illustrated lid, lying open
     case 'power': return [...a.on, a.h + 2];
     case 'shock': return [...a.shock, a.h + 2];
     case 'plug': return a.socket;
@@ -346,7 +346,7 @@ function aedScene(st, now) {
   // soft shadows that follow each figure: the picture itself, darkened, blurred and nudged down-right on the floor
   s += `<g opacity=".3" filter="url(#aedShadow)">${aedSpriteImg(lay.people)}${lay.a1 ? aedSpriteImg('A1') : ''}${lay.helper ? aedSpriteImg(lay.helper, { at: lay.helperAt }) : ''}</g>`;
   if (lay.aedCode) s += act('station', aedSpriteAED(false), 'data-k="aed"');
-  if (!lay.front) s += helper + (lay.helper ? aedB8Cover(lay.helper, L.key) : '');
+  if (!lay.front) s += helper + (lay.helper ? aedB8Cover(lay.helper, L.key) : '') + (lay.helper === 'B5idle' && !L.on ? aedScreenOff() : '');
   if (lay.a1) s += act('station', aedSpriteImg('A1'), 'data-k="rescuerA"');
   s += act('station', aedSpriteImg(lay.people, { jerk: L.jerk }), 'data-k="body"');
   s += aedPadsCode(L, lay);

@@ -73,6 +73,12 @@ function aedB8Cover(id, key) {
   const o = P(0, 0, 0), [x, y, rx, ry] = AED_SPR_SHOCK;
   return `<ellipse cx="${f(x + o[0])}" cy="${f(y + o[1])}" rx="${f(rx * 1.05)}" ry="${f(ry * 1.15)}" fill="#e2780c" stroke="#7a3a06" stroke-width=".5"/>`;
 }
+// B5idle's screen outline (scene units): darkened while the AED is still off (the LID station, before ON)
+const AED_SPR_IDLE_SCREEN = [[-178.6, 147.6], [-161.3, 138.4], [-153.1, 143.2], [-170.6, 152.5]];
+function aedScreenOff() {
+  const o = P(0, 0, 0);
+  return `<path d="M${AED_SPR_IDLE_SCREEN.map(([x, y]) => f(x + o[0]) + ' ' + f(y + o[1])).join('L')}Z" fill="#1f3a2c" stroke="#16261d" stroke-width=".4"/>`;
+}
 function aedSpriteShift(id, opt) {
   const o = P(0, 0, 0);                                     // the scene's own offset (OX, OY)
   if (!opt.at || !AED_SPR_AT[id]) return o;
