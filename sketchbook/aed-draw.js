@@ -416,5 +416,8 @@ function aedScene(st, now) {
   // the phone camera's focus: the active ring, or the middle of the people picture
   const pp = AED_SPR[lay.people], o0 = P(0, 0, 0);
   const camAt = (typeof focus !== 'undefined' && focus) || [pp[0] + pp[2] / 2 + o0[0], pp[1] + pp[3] / 2 + o0[1]];
-  return { svg: s, L, A, B, camAt };
+  // while the AED analyses, charges and shocks, frame the AED and the rescuer together: "hands off" must be in view
+  const both = ['analyse', 'clear', 'shock', 'next'].includes(L.key) && camAt && headA;
+  const camAt2 = both ? [(camAt[0] + headA[0]) / 2, (camAt[1] + headA[1]) / 2 + 12] : camAt;
+  return { svg: s, L, A, B, camAt: camAt2 };
 }
