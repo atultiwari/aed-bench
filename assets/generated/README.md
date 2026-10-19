@@ -27,3 +27,4 @@ redrawn by GPT Image 2.5 with the cast sheet (01), then registered by `tools/reg
 | Sprite | What | Job |
 |---|---|---|
 | P1 | The patient on his back, shirt closed (base layer) | f5aea166-4162-4abd-bf3e-50015ba8e285 (ref media c2b91684-a813-4a61-b84a-3cdeb00c0d08) |
+| P2 | Head tilt and chin lift: head back, neck extended, chin up, mouth open; body aligned to P1 (overlap 0.96) | 575acc46-9dbc-4297-998c-b7c419daa40d (refs P1 job + media 272164a0-2c1d-4f2c-b965-f82f0908aa48) |
