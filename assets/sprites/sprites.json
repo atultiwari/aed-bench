@@ -220,5 +220,35 @@
       1228
     ],
     "stretch": 1.1074
+  },
+  "B6": {
+    "file": "B6.webp",
+    "frame": "fit",
+    "replaces": "P3",
+    "from": "B6c",
+    "x": -183.791,
+    "y": 5.112,
+    "width": 270.591,
+    "height": 132.626,
+    "px": [
+      1722,
+      992
+    ],
+    "legsOverlap": 0.825
+  },
+  "B6d": {
+    "file": "B6d.webp",
+    "frame": "fit",
+    "replaces": "P3",
+    "from": "B6c, shoulders pushed down 34px over fixed hands, in code",
+    "x": -183.791,
+    "y": 5.112,
+    "width": 270.591,
+    "height": 132.626,
+    "px": [
+      1722,
+      992
+    ],
+    "legsOverlap": 0.825
   }
 }

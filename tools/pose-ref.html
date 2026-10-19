@@ -64,6 +64,11 @@ const SPRITES = {
       + cyl(68, 231, 12, 13.4, 3.6, matOf('#5fe08a'), toneI, .9) + cyl(67, 254, 12, 13.4, 4.4, matOf('#f08c00'), toneI, .9)
       + box(36, 268, 0, 80, 312, 4, matOf('#2f9e5b'), toneI, 1.1),
     propBox: [[36, 222, 0], [80, 312, 14]] },
+  // Pad 1 goes on while compressions continue (ERC 2025: "continue CPR while the defibrillation pads are being attached"):
+  // Helper B, kneeling beyond the head on the patient's right, presses pad 1 below the right collarbone
+  B6c: { frame: 'fit', people: [['patient', {}], ['A_compress', {}],
+    ['raw', { who: 'B', mode: 'kneel', at: [64, 220], facing: [28, -64, 0], sit: .1, look: { pitch: 35 }, hands: { R: { to: LM.padRight, shape: 'flat', dir: [1, 0, 0] } } }]],
+    opt: { shirtOpen: 1 }, props: () => shape(on(PZ(LM.padRight[2] + .6), rrUV(LM.padRight[0] - 6, LM.padRight[1] - 8, LM.padRight[0] + 6, LM.padRight[1] + 8, 2)), '#f7f5ee', 1.2) },
 };
 const id = new URLSearchParams(location.search).get('sprite') || 'P1', SP = SPRITES[id], F = FRAMES[SP.frame] || null;
 const Q0 = new URLSearchParams(location.search);
