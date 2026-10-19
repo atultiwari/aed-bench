@@ -42,6 +42,9 @@ const SPRITES = {
   // ERC 2025 Fig. 7 "Airway" and "Breathing": hand on the forehead, fingertips under the point of the chin, head tilted back
   A3c: { frame: 'fit', layer: 1, people: [['patient', { tilt: 1 }], ['raw', { who: 'A', mode: 'kneel', at: [66, 172], facing: [1, 0, 0], look: { pitch: 40 },
     hands: { L: { to: LMT.forehead, shape: 'flat', dir: [0, 1, 0] }, R: { to: LMT.chin, shape: 'flat', dir: [0, 1, 0] } } }]], opt: {} },
+  // "Get the AED!": kneeling up, turned to her right, pointing at the helper standing toward the patient's feet
+  A4c: { frame: 'fit', layer: 1, people: [['patient', {}], ['raw', { who: 'A', mode: 'kneel', at: [60, 150], facing: [1, 0, 0], look: { yaw: 55, pitch: -5 },
+    hands: { R: { to: [96, 97, 96], shape: 'point', dir: [.62, -.74, .1] } } }]], opt: {} },
 };
 const id = new URLSearchParams(location.search).get('sprite') || 'P1', SP = SPRITES[id], F = FRAMES[SP.frame] || null;
 const Q0 = new URLSearchParams(location.search);

@@ -95,6 +95,8 @@
       case 'press':
         h = V.norm(V.add(V.mul(V.norm(V.perp(spec.dir || body.f, UP)), .35), [0, 0, -1])); p = V.norm(V.perp(spec.dir || body.f, h));
         W = V.add(spec.to, V.mul(h, -13)); break;
+      case 'point':   // arm out toward someone: `to` is the wrist, `dir` the way the finger points
+        h = V.norm(spec.dir || body.f); p = V.norm(V.perp([0, 0, -1], h)); W = spec.to; break;
       case 'open':
         h = V.norm(V.add([0, 0, 1], V.mul(body.f, .25))); p = body.f; W = spec.to; break;
       default:

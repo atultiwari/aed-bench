@@ -80,5 +80,20 @@
       796
     ],
     "legsOverlap": 0.896
+  },
+  "A4": {
+    "file": "A4.webp",
+    "frame": "fit",
+    "replaces": "P1",
+    "from": "A4c",
+    "x": -124.163,
+    "y": -16.907,
+    "width": 215.055,
+    "height": 152.788,
+    "px": [
+      1363,
+      1093
+    ],
+    "legsOverlap": 0.823
   }
 }
