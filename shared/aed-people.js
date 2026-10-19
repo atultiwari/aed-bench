@@ -99,6 +99,8 @@
         h = V.norm(spec.dir || body.f); p = V.norm(V.perp([0, 0, -1], h)); W = spec.to; break;
       case 'open':
         h = V.norm(V.add([0, 0, 1], V.mul(body.f, .25))); p = body.f; W = spec.to; break;
+      case 'grip':    // holding a handle that hangs below the hand: `to` is the wrist, fingers point down
+        W = spec.to; h = [0, 0, -1]; p = V.norm(V.perp(V.mul(body.r, side), h)); break;
       default:
         W = wristIfFree; h = V.norm(V.sub(W, elbow));
         p = V.norm(V.perp(V.mul(body.r, -side), h));

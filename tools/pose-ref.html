@@ -52,6 +52,10 @@ const SPRITES = {
   // Helper B running off to fetch the AED: away from the patient, toward the upper right (-y), two frames of the cycle
   B2: { frame: 'fit', people: [['B_run', { at: [158, -10], facing: [0, -1, 0], phase: Math.PI / 2 }]], opt: {} },
   B3: { frame: 'fit', people: [['B_run', { at: [158, -10], facing: [0, -1, 0], phase: -Math.PI / 2 }]], opt: {} },
+  // Helper B walking back in with the AED (from beyond the patient's head, far side), carrying it by the handle
+  B4: { frame: 'fit', people: [['raw', { who: 'B', mode: 'run', at: [10, 290], facing: [.19, -.98, 0], phase: .9, look: { pitch: 6 },
+    hands: { R: { to: [-10, 285, 64], shape: 'grip' } } }]], opt: {},
+    props: () => box(-16, 269, 30, -4, 301, 60, matOf('#2f9e5b'), toneI, 1.1) + box(-12, 279, 60, -8, 291, 64, matOf('#3d3935'), toneI, .9) },
 };
 const id = new URLSearchParams(location.search).get('sprite') || 'P1', SP = SPRITES[id], F = FRAMES[SP.frame] || null;
 const Q0 = new URLSearchParams(location.search);
@@ -75,7 +79,8 @@ const PX_PER_UNIT = 1536 / w;
 // ghost: the person this pose touches, drawn as a pale grey placeholder behind, so the model understands the pose
 const ghost = SP.ghost && new URLSearchParams(location.search).get('ghost') !== '0' ? `<filter id="grey"><feColorMatrix type="saturate" values="0"/></filter><g opacity=".28" filter="url(#grey)">${byDepth(pplPerson(PP.solve(PP.POSES.patient()), {}))}</g>` : '';
 const solid = (fid, col) => `<filter id="${fid}"><feFlood flood-color="${col}"/><feComposite in2="SourceAlpha" operator="in"/></filter>`;
-const body = MASK ? `${solid('blk', '#000')}${solid('wht', '#fff')}${byDepth(parts)}` : `${ghost}${byDepth(parts)}`;
+const props = SP.props ? SP.props() : '';
+const body = MASK ? `${solid('blk', '#000')}${solid('wht', '#fff')}${byDepth(parts)}` : `${ghost}${byDepth(parts)}${props}`;
 document.getElementById('out').innerHTML = `<svg width="${(w * PX_PER_UNIT / 2).toFixed(0)}" height="${(h * PX_PER_UNIT / 2).toFixed(0)}" viewBox="0 0 ${w.toFixed(2)} ${h.toFixed(2)}">${body}</svg>`;
 // where this frame sits in the scene projection (P with OX = OY = 0, RC as above): add these to place the sprite
 window.SPRITE_META = { sprite: id, frame: SP.frame, originX: x0, originY: y0, width: w, height: h };

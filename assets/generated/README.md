@@ -43,3 +43,4 @@ redrawn by GPT Image 2.5 with the cast sheet (01), then registered by `tools/reg
 | **B2** | Running off to fetch the AED, frame 1 (stride, seen from behind, heading to the upper right) | fd2c443b-289e-4dcf-aa92-1a4fe4173ac5 (ref media 05c2148f-0b79-40fd-81ee-bf915f029f5c) |
 | B3-try1 | Run frame 2, first try: copied B2's stride. **Rejected** | 97b70a21-13c3-40fe-8647-93771743d4be |
 | **B3** | Run frame 2 (passing phase, arms swapped); alternates with B2 | d1afa95d-1017-4209-b5e4-b4a254f0019f (ref media 0ad90468-806f-4c61-89f6-01b2bd62ea38) |
+| **B4** | Helper B walking back in with the AED (green case, white heart-and-lightning mark, carried by the handle), heading right toward his kneeling spot | a713d8ee-75e1-48d6-94ca-ef4efe91db5a (ref media 288d204f-4f6e-468b-a9dd-65aafc8d16fe) |
