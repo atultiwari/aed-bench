@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AED Bench · Characters</title>
+<style>
+  :root{--paper:#f2efe7;--ink:#231e16;--muted:#6b6357;--rule:rgba(35,30,22,.15);--accent:#f4b829}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.5 ui-sans-serif,system-ui,sans-serif;padding:28px max(20px,calc((100vw - 1320px)/2)) 40px}
+  h1{font-size:26px;margin:0} h2{font-size:17px;margin:28px 0 4px} .lede{color:var(--muted);margin:4px 0 0;max-width:820px}
+  .draft{display:inline-block;background:var(--accent);border:1.5px solid var(--ink);border-radius:999px;padding:1px 10px;font-size:12px;font-weight:700;margin-left:10px;vertical-align:middle}
+  .grid{display:grid;gap:14px}
+  .cast{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .card{background:#fbf8f0;border:1.5px solid var(--ink);border-radius:14px;padding:12px 14px;box-shadow:3px 3px 0 var(--ink)}
+  .card h3{margin:0;font-size:16px} .card p{margin:2px 0 6px;color:var(--muted);font-size:13px}
+  .sw{display:flex;gap:6px;margin:4px 0 6px;flex-wrap:wrap} .sw span{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--muted)}
+  .sw i{width:16px;height:16px;border-radius:50%;border:1.5px solid var(--ink);display:inline-block}
+  .turn{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;align-items:end}
+  .turn figure{margin:0;text-align:center} figcaption{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+  svg{width:100%;height:auto;display:block;overflow:hidden}
+  .poses{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .poses svg{max-height:300px;width:auto;max-width:100%;margin:0 auto}
+  .closeups svg{max-height:240px;width:auto;max-width:100%;margin:0 auto}
+  .poses figcaption{text-transform:none;letter-spacing:0;font-size:13px;color:var(--ink);text-align:left;margin-top:4px}
+  .poses figcaption b{display:block}
+  .closeups{grid-template-columns:repeat(4,minmax(0,1fr))}
+  table{border-collapse:collapse;font-size:13px;margin-top:6px;background:#fbf8f0} td,th{border:1px solid var(--rule);padding:5px 9px;text-align:left}
+  .ok{color:#1d7a3a;font-weight:700} .bad{color:#b3261e;font-weight:700}
+  @media (max-width:900px){.cast,.poses,.closeups{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<h1>AED Bench · The characters <span class="draft">Draft for review</span></h1>
+<p class="lede">The three people, drawn in the Sketchbook style from one shared skeleton (<code>shared/aed-people.js</code>) that all three styles will use. The look follows the figures in the ERC Guidelines 2025 Adult BLS. Nothing here is in the pages yet.</p>
+
+<h2>The cast</h2>
+<div class="grid cast" id="cast"></div>
+
+<h2>Key poses</h2>
+<div class="grid poses" id="poses"></div>
+
+<h2>Close-ups: faces and hands</h2>
+<div class="grid closeups" id="close"></div>
+
+<h2>Posture checks (computed from the skeleton)</h2>
+<div id="checks"></div>
+
+<script src="../sketchbook/engine.js"></script>
+<script src="../shared/aed-spec.js"></script>
+<script src="../shared/aed-people.js"></script>
+<script src="../sketchbook/aed-people-draw.js"></script>
+<script>
+addEventListener('error', e => { document.documentElement.dataset.errors = (document.documentElement.dataset.errors || '') + ' ' + e.message + ';'; });
+const PP = AEDPeople, Vv = PP.V;
+setLight(105);
+let sheetN = 0;
+
+/* render: draw() returns svg + the 3D points to frame; the panel is framed on them, then drawn for real */
+function panel(draw, pts, { view = 0, pad = 10, centre = null, size = null } = {}) {
+  VIEW = view; RC = centre || [avg(pts)[0], avg(pts)[1]];
+  OX = OY = 0;
+  const q = pts.map(p => P(...p)), xs = q.map(a => a[0]), ys = q.map(a => a[1]);
+  OX = -Math.min(...xs) + pad; OY = -Math.min(...ys) + pad;
+  let w = Math.max(...xs) - Math.min(...xs) + 2 * pad, h = Math.max(...ys) - Math.min(...ys) + 2 * pad;
+  if (size) { OX += (size[0] - w) / 2; OY += (size[1] - h); w = size[0]; h = size[1]; }
+  const id = 'hand' + (++sheetN), svg = draw();
+  VIEW = 0;
+  return `<svg viewBox="0 0 ${w.toFixed(1)} ${h.toFixed(1)}"><defs>${filterFor(.35).replace(/id="hand"/, `id="${id}"`).replace(/id="wob"/, `id="w${id}"`).replace(/url\(#wob\)|#wob/g, `#w${id}`)}</defs><g filter="url(#${id})">${svg}</g></svg>`;
+}
+const corners = (a, b) => [0, 1].flatMap(i => [0, 1].flatMap(j => [0, 1].map(k => [[a, b][i][0], [a, b][j][1], [a, b][k][2]])));
+const jointPts = p => [...Object.values(p.J), PP.V.add(p.J.head, [0, 0, p.D.headR + 4]), PP.V.add(p.J.head, [p.D.headR, p.D.headR, 0]), PP.V.add(p.J.head, [-p.D.headR, -p.D.headR, 0])];
+const floor = (x0, y0, x1, y1) => shape(on(PZ(0), rrUV(x0, y0, x1, y1, 4)), '#cfdcc9', 1);
+const shadowOf = p => `<g opacity=".25">${castShadow(Object.values(p.J).map(q => [q[0], q[1], Math.max(0, q[2])]), 0)}</g>`;
+
+/* ---------- the cast: turnarounds ---------- */
+const castEl = document.getElementById('cast');
+for (const who of ['patient', 'A', 'B']) {
+  const c = PP.CAST[who], p = PP.solve({ who, mode: 'stand', at: [0, 0], facing: [1, 0, 0] });
+  const views = ['Front', 'Left', 'Back', 'Right'].map((n, v) => `<figure>${panel(() => floor(-28, -28, 28, 28) + shadowOf(p) + pplDraw(p), [...jointPts(p), [-28, -28, 0], [28, 28, 0]], { view: v, pad: 6, centre: [0, 0], size: [95, 215] })}<figcaption>${n}</figcaption></figure>`).join('');
+  castEl.insertAdjacentHTML('beforeend', `<div class="card"><h3>${c.name}</h3><p>${c.role}</p>
+    <div class="sw">${[['Skin', c.skin], ['Hair', c.hair], ['Top', c.top], ['Trousers', c.bottom]].map(([n, h]) => `<span><i style="background:${h}"></i>${n}</span>`).join('')}</div>
+    <div class="turn">${views}</div></div>`);
+}
+
+/* ---------- key poses ---------- */
+const patient = PP.solve(PP.POSES.patient()), LM = PP.landmarks(patient);
+const aedBox = (x0, y0, x1, y1) => box(x0, y0, 0, x1, y1, 10, matOf('#2f9e5b'), toneI, 1.1)
+  + shape(on(PZ(10.05), rrUV(x0 + 3, y0 + 3, x1 - 3, y1 - 3, 2)), '#55504a', .8)
+  + cyl(x0 + 26, y0 + 9, 10, 11.5, 3.4, matOf('#5fe08a'), toneI, .9) + cyl(x0 + 24, y0 + 25, 10, 11.5, 4.2, matOf('#f08c00'), toneI, .9)
+  + shape(on(PZ(10.1), rrUV(x0 + 5, y0 + 6, x0 + 16, y1 - 6, 1.5)), '#203a2c', .7);
+const pad = (c, side) => side ? shape(on(PX(c[0] + .4), rrUV(c[1] - 7, c[2] - 6, c[1] + 7, c[2] + 6, 2)), '#f7f5ee', 1)
+  : shape(on(PZ(c[2] + .4), rrUV(c[0] - 6, c[1] - 8, c[0] + 6, c[1] + 8, 2)), '#f7f5ee', 1);
+const posesEl = document.getElementById('poses');
+const POSE_LIST = [
+  ['The patient, on his back', 'Arms at his sides, head on the floor, eyes closed.', () => {
+    return panel(() => floor(40, 20, 160, 200) + shadowOf(patient) + pplDraw(patient), [...jointPts(patient), [40, 20, 0], [160, 200, 0]]); }],
+  ['Shirt open, pads on (ERC Fig. 6a)', 'Bare chest with the sternum and nipples as landmarks: pad 1 below the right collarbone, pad 2 on the left side below the armpit.', () => {
+    const tilt = PP.solve(PP.POSES.patient({ tilt: 1 }));
+    return panel(() => floor(40, 20, 160, 200) + pplDraw(tilt, { shirtOpen: 1 }) + pad(LM.padRight) + pad(LM.padLeft, true), [...jointPts(tilt), [40, 20, 0], [160, 200, 0]]); }],
+  ['Rescuer A, kneeling', 'Kneeling up beside the chest: knees apart, shins on the floor, toes tucked.', () => {
+    const a = PP.solve(PP.POSES.A_kneel({ at: [60, 142] }));
+    return panel(() => floor(10, 100, 100, 190) + shadowOf(a) + pplDraw(a), [...jointPts(a), [10, 100, 0], [100, 190, 0]]); }],
+  ['Rescuer A, compressing (ERC Fig. 7)', 'Heel of the hand on the lower half of the sternum, fingers interlaced, arms straight, shoulders over the hands.', () => {
+    const a = PP.solve(PP.POSES.A_compress());
+    return panel(() => floor(10, 60, 160, 200) + shadowOf(patient) + shadowOf(a) + byDepth([...pplPerson(patient, { shirtOpen: 0 }), ...pplPerson(a)]), [...jointPts(a), ...jointPts(patient), [10, 60, 0], [160, 200, 0]]); }],
+  ['Rescuer A, hands off', 'While the AED analyses and shocks: hands lifted clear, palms open.', () => {
+    const a = PP.solve(PP.POSES.A_handsOff());
+    return panel(() => floor(10, 60, 160, 200) + shadowOf(patient) + byDepth([...pplPerson(patient, { shirtOpen: 1 }), ...pplPerson(a)]) + pad(LM.padRight) + pad(LM.padLeft, true), [...jointPts(a), ...jointPts(patient), [10, 60, 0], [160, 200, 0]]); }],
+  ['Helper B, pressing the AED', 'Kneeling at the AED, sitting back a little, pressing the button with one hand.', () => {
+    const b = PP.solve(PP.POSES.B_reach({ at: [30, 250], to: [62, 254, 11.5] }));
+    return panel(() => floor(-10, 190, 90, 290) + shadowOf(b) + byDepth([{ at: [56, 248, 5], svg: aedBox(38, 230, 74, 266) }, ...pplPerson(b)]), [...jointPts(b), [-10, 190, 0], [90, 290, 0]]); }],
+];
+POSE_LIST.forEach(([t, d, f]) => posesEl.insertAdjacentHTML('beforeend', `<figure class="card">${f()}<figcaption><b>${t}</b>${d}</figcaption></figure>`));
+
+/* ---------- close-ups ---------- */
+const closeEl = document.getElementById('close');
+for (const who of ['patient', 'A', 'B']) {
+  const p = who === 'patient' ? patient : PP.solve({ who, mode: 'stand', at: [0, 0], facing: [1, 0, 0], look: { pitch: 4, yaw: -10 } });
+  const h = p.J.head, R = p.D.headR + 6;
+  const box3 = corners([h[0] - R, h[1] - R, h[2] - R], [h[0] + R, h[1] + R, h[2] + R]);
+  closeEl.insertAdjacentHTML('beforeend', `<figure class="card">${panel(() => pplDraw(p, {}), box3, { pad: 2 })}<figcaption>${PP.CAST[who].name}</figcaption></figure>`);
+}
+{
+  const a = PP.solve(PP.POSES.A_compress()), m = Vv.lerp(a.J.wristL, a.J.wristR, .5);
+  const box3 = corners([m[0] - 20, m[1] - 18, m[2] - 8], [m[0] + 22, m[1] + 18, m[2] + 22]);
+  closeEl.insertAdjacentHTML('beforeend', `<figure class="card">${panel(() => byDepth([...pplPerson(patient, { shirtOpen: 1 }), ...pplPerson(a)]), box3, { pad: 2 })}<figcaption>Hands on the chest: interlaced fingers</figcaption></figure>`);
+}
+
+/* ---------- posture checks ---------- */
+const rows = [];
+const ok = (b, t) => `<span class="${b ? 'ok' : 'bad'}">${b ? 'OK' : 'NO'}</span> ${t}`;
+for (const dip of [0, 5.5]) {
+  const q = PP.posture(PP.solve(PP.POSES.A_compress({ dip })));
+  rows.push([`Compressing (${dip ? 'pushed ' + dip + ' cm' : 'chest up'})`, ok(q.shoulderOverHandsCm <= 3, `shoulders ${q.shoulderOverHandsCm.toFixed(1)} cm from over the hands`), ok(q.elbowDeg.every(a => a >= 170), `elbows ${q.elbowDeg.map(a => a.toFixed(0) + '°').join(' / ')}`), ok(q.kneesOnFloor, 'knees on the floor')]);
+}
+const qo = PP.solve(PP.POSES.A_handsOff());
+rows.push(['Hands off', ok(qo.J.wristL[2] > 60 && qo.J.wristR[2] > 60, 'both hands lifted clear'), '', '']);
+document.getElementById('checks').innerHTML = `<table><tr><th>Pose</th><th>Shoulders over hands</th><th>Elbows straight (≥170°)</th><th>Kneeling</th></tr>${rows.map(r => `<tr>${r.map(c => `<td>${c}</td>`).join('')}</tr>`).join('')}</table>`;
+</script>
+</body>
+</html>
