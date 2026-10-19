@@ -62,7 +62,9 @@ def main(src_id: str, out_id: str, meta_json: str, like_id: str = 'P1', whole: b
     meta = json.loads(meta_json)
     gen = Image.open(GEN / f'{src_id}.png').convert('RGBA')
     ref = Image.open(REF / f'{src_id}.png').convert('RGBA')
-    mask_ref = Image.open(REF / f'{src_id}-mask.png').convert('L')
+    mask_path = REF / f'{src_id}-mask.png'
+    if not whole and not mask_path.exists():
+        sys.exit(f'{src_id}: cutting a layer needs {mask_path.name} (tools/pose-ref.html?mask=1)')
     gb, rb = alpha_bbox(gen), ink_bbox(ref)
     ux, uy = meta['width'] / ref.width, meta['height'] / ref.height
     sx, sy = (rb[2] - rb[0]) / (gb[2] - gb[0]), (rb[3] - rb[1]) / (gb[3] - gb[1])
@@ -100,10 +102,10 @@ def main(src_id: str, out_id: str, meta_json: str, like_id: str = 'P1', whole: b
     # 3. the rescuer's visible pixels: the reference mask carried into generated-image pixels, grown a little
     # PIL's affine maps each output (generated) pixel to the input (reference) pixel it reads
     affine = (sx, 0, rb[0] - gb[0] * sx, 0, sy, rb[1] - gb[1] * sy)
-    m = mask_ref.point(lambda v: 255 if v < 128 else 0).transform(gen.size, Image.AFFINE, affine, fill=0)
-    m = m.filter(ImageFilter.MaxFilter(11))
     layer = gen.copy()
     if not whole:
+        m = Image.open(mask_path).convert('L').point(lambda v: 255 if v < 128 else 0)
+        m = m.transform(gen.size, Image.AFFINE, affine, fill=0).filter(ImageFilter.MaxFilter(11))
         layer.putalpha(ImageChops.multiply(gen.getchannel('A'), m))
     lb = alpha_bbox(layer)
     # 4. trim and record
