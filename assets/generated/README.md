@@ -15,3 +15,4 @@ Each file lists its model, prompt summary and job id, so it can be traced and re
 
 **What works:** render the pose from the shared skeleton (posture-tested), upload it, and ask GPT Image 2.5 to redraw it
 with the cast sheet's people and style. Text-only prompts and edits did not fix the technique.
+| **03-heart.png** | Heart alone, anterior view, transparent background: SVC into the right atrium, aorta behind the pulmonary trunk with three arch branches, LAA and pulmonary veins at upper right, LAD to the apex, RCA in the right AV groove, apex down and to the patient's left | GPT Image 2.5, high, 2k, transparent, ref 01 | 21483111-c4a3-495f-93ca-45b206eaaa81 |
