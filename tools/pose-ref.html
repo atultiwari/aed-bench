@@ -18,6 +18,7 @@
 <script>
 const PP = AEDPeople;
 const LM = PP.landmarks(PP.solve(PP.POSES.patient()));
+const LMT = PP.landmarks(PP.solve(PP.POSES.patient({ tilt: 1 })));   // head tilted back
 setLight(105);
 // 3D frames (cm, scene coordinates): every sprite of a person uses the same frame, so their sprites share one scale
 const FRAMES = {
@@ -38,6 +39,9 @@ const SPRITES = {
   // A2 drawn together with the patient; A's layer is cut out with ?mask=1
   A2c: { frame: 'fit', layer: 1, people: [['patient', {}], ['raw', { who: 'A', mode: 'kneel', at: [70, 162], facing: [1, 0, 0], look: { pitch: 30 },
     hands: { L: { to: LM.shoulderR, shape: 'flat' }, R: { to: LM.shoulderL, shape: 'flat' } } }]], opt: {} },
+  // ERC 2025 Fig. 7 "Airway" and "Breathing": hand on the forehead, fingertips under the point of the chin, head tilted back
+  A3c: { frame: 'fit', layer: 1, people: [['patient', { tilt: 1 }], ['raw', { who: 'A', mode: 'kneel', at: [66, 172], facing: [1, 0, 0], look: { pitch: 40 },
+    hands: { L: { to: LMT.forehead, shape: 'flat', dir: [0, 1, 0] }, R: { to: LMT.chin, shape: 'flat', dir: [0, 1, 0] } } }]], opt: {} },
 };
 const id = new URLSearchParams(location.search).get('sprite') || 'P1', SP = SPRITES[id], F = FRAMES[SP.frame] || null;
 const Q0 = new URLSearchParams(location.search);
