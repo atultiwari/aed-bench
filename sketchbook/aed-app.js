@@ -99,7 +99,7 @@ function aedParams(s1, q) {
   const key = q.get('at'), n = q.get('step');
   if (key && AED.IDX[key] != null) {
     const i = AED.IDX[key], k = aedStepOf(key), u = Math.max(0, Math.min(1, +(q.get('u') ?? 1)));
-    Object.assign(s1, { at: i, u, step: k, busy: false });
+    Object.assign(s1, { at: i, u, step: Math.max(0, k), busy: false });
   } else if (n != null && +n > 0) {
     const k = Math.min(AED.STEPS.length, +n), last = AED.STEPS[k - 1].path.slice(-1)[0];
     Object.assign(s1, { step: k, at: AED.IDX[last], u: 1 });

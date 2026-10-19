@@ -50,3 +50,5 @@ redrawn by GPT Image 2.5 with the cast sheet (01), then registered by `tools/reg
 | **B7c → B7** | Pad 2 placed on the left mid-axillary line below the armpit, helper on the patient's left side, compressions continuing; pad 1 already on. Aligned to P3. Note: Rescuer A's shoes came out as sneakers here | e5a1bc2c-2a39-48e2-a6bf-f50019556e86 (ref media e61f5ae0-b4a2-453f-ab93-8742b04cb667) |
 | **B7d** (code) | B7 with Rescuer A's shoulders pushed down 30 px over fixed hands | - |
 | **B8** | "Everyone clear!": Helper B kneeling upright at the AED (shock button lit, not yet pressed), palm out toward the patient, calling out and looking along the body. Pairs with A8 (hands off) | 8c4550d6-fc1a-48ed-9eb5-21d37d035c6a (ref media 715b836a-8f80-4de1-aca6-11af4f7b6422) |
+| AED (cut) | The open AED cut out of B8 (no helper), drawn when nobody kneels at it; its shock button is covered dark until "shock advised" | from 8c4550d6-fc1a-48ed-9eb5-21d37d035c6a |
+| chest.webp, heart.webp | The window images, cropped from 04-chest and 03-heart | - |

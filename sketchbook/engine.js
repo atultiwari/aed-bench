@@ -247,7 +247,8 @@ const filterFor = k => `<filter id="hand" x="-3%" y="-3%" width="106%" height="1
   <feColorMatrix in="n1" type="matrix" values=".3 0 0 0 .84  .3 0 0 0 .84  .3 0 0 0 .84  0 0 0 0 1" result="grain"/>
   <feTurbulence type="fractalNoise" baseFrequency="${(0.012/k).toFixed(4)}" numOctaves="2" seed="7" result="n2"/>
   <feColorMatrix in="n2" type="matrix" values=".3 0 0 0 .85  .3 0 0 0 .85  .3 0 0 0 .85  0 0 0 0 1" result="blot"/>
-  <feBlend in="wob" in2="grain" mode="multiply" result="g1"/><feBlend in="g1" in2="blot" mode="multiply" result="g2"/>
+  <feComposite in="grain" in2="wob" operator="in" result="grainIn"/><feComposite in="blot" in2="wob" operator="in" result="blotIn"/>
+  <feBlend in="wob" in2="grainIn" mode="multiply" result="g1"/><feBlend in="g1" in2="blotIn" mode="multiply" result="g2"/>
   <feComposite in="g2" in2="wob" operator="in"/></filter>`;
 
 /* mountFigure({

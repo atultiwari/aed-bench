@@ -43,33 +43,42 @@ function aedDrawWindow(L, now) {
   if (cap) cap.textContent = target.cap;
 }
 
+/* The chest and heart are the generated illustrations (assets/sprites/chest.webp, heart.webp, from 04-chest and
+   03-heart). Positions are in the window's 400 x 260 units, measured on those images: the heart sits behind the
+   sternum with its apex at the left 5th intercostal space; pad 1 below the right collarbone beside the sternum,
+   pad 2 on the left mid-axillary line (ERC 2025 Fig. 6a). */
+const AED_WIN_GEO = {
+  chest: [75, 2, 250, 196], heart: [174.9, 52.7, 57.8, 94], pad1: [164.7, 75, -10], pad2: [264.3, 139.6, 8], padWH: [32.5, 43],
+  aorta: [[210, 58], [234, 46]], cava: [[181, 40], [181, 58]],
+};
 function aedChest(L, now) {
-  const W = AED_WIN, squeeze = W.arrows * L.dip * .1, cx = 216, cy = 112;
-  let s = `<path d="${AED_CHEST_PATH}" fill="#f3e2d3" stroke="${INK}" stroke-width="2"/>`
-    + `<path d="M110 36Q150 46 190 40M290 36Q250 46 210 40" fill="none" stroke="#c9a88c" stroke-width="3" stroke-linecap="round"/>`
-    + `<path d="M200 40L200 150" stroke="#d9bfa8" stroke-width="6" stroke-linecap="round"/>`
-    + `<text x="200" y="186" font-size="9" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" fill="#9a8270" letter-spacing=".08em">FRONT OF THE CHEST</text>`;
-  // vessels, then the heart (squeezed by each push)
-  s += `<g transform="translate(${cx} ${cy}) scale(${aedF(.74 * (1 - squeeze))} ${aedF(.74 * (1 - squeeze * .6))})">`
-    + `<path d="M-14-50C-16-74-2-86 18-84C34-82 40-70 38-58" fill="none" stroke="#c0392b" stroke-width="13" stroke-linecap="round"/>`
-    + `<path d="M-34-46C-40-70-30-82-22-86" fill="none" stroke="#3d6fb6" stroke-width="11" stroke-linecap="round"/>`
-    + `<path d="${AED_HEART_PATH}" fill="${W.ripple > .5 ? '#b8476a' : '#c4566f'}" stroke="${INK}" stroke-width="2.2"/>`
-    + `<clipPath id="aedHeartClip"><path d="${AED_HEART_PATH}"/></clipPath><g clip-path="url(#aedHeartClip)">${aedRipples(now, W.ripple)}</g>`
-    + `<path d="M-30-30Q-6-8 2 40" fill="none" stroke="${INK}" stroke-width="1.1" opacity=".5"/>`;
-  // blood pushed on with each compression: red out of the aorta, blue in from the veins
-  if (W.arrows > .02) s += `<g opacity="${aedF(W.arrows * (.3 + .7 * L.dip))}"><path d="M40-60L64-60" stroke="#c0392b" stroke-width="6"/><path d="M62-72L82-60L62-48Z" fill="#c0392b"/>`
-    + `<path d="M-60-86L-38-86" stroke="#3d6fb6" stroke-width="6"/><path d="M-40-98L-20-86L-40-74Z" fill="#3d6fb6"/></g>`;
-  s += '</g>';
-  // the pads (patient's right is the viewer's left) and the line between them
-  const pr = [140, 70], pl = [326, 140];
-  if (L.padsOn[0] && L.padsOn[1]) s += `<path d="M${pr[0]} ${pr[1]}L${pl[0]} ${pl[1]}" stroke="${INK}" stroke-width="1.4" stroke-dasharray="5 4" opacity=".55"/>`;
-  if (W.current > .02) {
-    const o = aedF(W.current);
-    s += `<path d="M${pr[0]} ${pr[1]}L${pl[0]} ${pl[1]}" stroke="#ffe066" stroke-width="34" stroke-linecap="round" opacity="${aedF(W.current * .55)}"/>`
-      + `<path d="M${pr[0]} ${pr[1]}L${pl[0]} ${pl[1]}" stroke="#fff6c2" stroke-width="8" stroke-linecap="round" opacity="${o}"/>`;
+  const W = AED_WIN, G = AED_WIN_GEO, [hx, hy, hw, hh] = G.heart, cx = hx + hw / 2, cy = hy + hh * .58;
+  const sq = 1 - .07 * W.arrows * L.dip, quiver = 7 * W.ripple;
+  let s = `<defs><filter id="aedVF" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="turbulence" baseFrequency=".09 .13" numOctaves="2" seed="${Math.floor(now * 18) % 97}" result="t"/>`
+    + `<feDisplacementMap in="SourceGraphic" in2="t" scale="${aedF(quiver)}" xChannelSelector="R" yChannelSelector="G"/></filter>`
+    + `<clipPath id="aedChestClip"><rect x="${G.chest[0]}" y="${G.chest[1]}" width="${G.chest[2]}" height="${G.chest[3]}"/></clipPath></defs>`;
+  s += `<image href="../assets/sprites/chest.webp" x="${G.chest[0]}" y="${G.chest[1]}" width="${G.chest[2]}" height="${G.chest[3]}"/>`;
+  // the heart, seen through the chest wall: quivering in VF (displacement noise), squeezed by each push
+  s += `<g opacity=".93" transform="translate(${aedF(cx)} ${aedF(cy)}) scale(${aedF(sq)} ${aedF(1 - (1 - sq) * .6)}) translate(${aedF(-cx)} ${aedF(-cy)})">`
+    + `<image href="../assets/sprites/heart.webp" x="${hx}" y="${hy}" width="${hw}" height="${hh}"${quiver > .3 ? ' filter="url(#aedVF)"' : ''}/></g>`;
+  if (W.ripple > .05) s += `<ellipse cx="${aedF(cx)}" cy="${aedF(hy + hh * .6)}" rx="${aedF(hw * .42)}" ry="${aedF(hh * .3)}" fill="#7a2a6a" opacity="${aedF(.18 * W.ripple)}"/>`;
+  // blood pushed on with each compression: red out of the aorta, blue into the right heart
+  if (W.arrows > .02) {
+    const o = aedF(W.arrows * (.3 + .7 * L.dip)), ar = (a, b, col) => {
+      const dx = b[0] - a[0], dy = b[1] - a[1], l = Math.hypot(dx, dy), ux = dx / l, uy = dy / l;
+      return `<path d="M${a[0]} ${a[1]}L${b[0]} ${b[1]}" stroke="${col}" stroke-width="3.2" stroke-linecap="round"/>`
+        + `<path d="M${aedF(b[0] + ux * 6)} ${aedF(b[1] + uy * 6)}L${aedF(b[0] - uy * 4)} ${aedF(b[1] + ux * 4)}L${aedF(b[0] + uy * 4)} ${aedF(b[1] - ux * 4)}Z" fill="${col}"/>`; };
+    s += `<g opacity="${o}">${ar(...G.aorta, '#c0392b')}${ar(...G.cava, '#3d6fb6')}</g>`;
   }
-  if (L.padsOn[0]) s += `<rect x="${pr[0] - 15}" y="${pr[1] - 19}" width="30" height="38" rx="5" fill="#f7f5ee" stroke="${INK}" stroke-width="1.8" transform="rotate(-12 ${pr[0]} ${pr[1]})"/>`;
-  if (L.padsOn[1]) s += `<rect x="${pl[0] - 15}" y="${pl[1] - 19}" width="30" height="38" rx="5" fill="#f7f5ee" stroke="${INK}" stroke-width="1.8" transform="rotate(14 ${pl[0]} ${pl[1]})"/>`;
+  const pr = G.pad1, pl = G.pad2, [pw, ph] = G.padWH;
+  if (L.padsOn[0] && L.padsOn[1]) s += `<path d="M${pr[0]} ${pr[1]}L${pl[0]} ${pl[1]}" stroke="${INK}" stroke-width="1.2" stroke-dasharray="5 4" opacity=".5"/>`;
+  if (W.current > .02) {
+    s += `<path d="M${pr[0]} ${pr[1]}L${pl[0]} ${pl[1]}" stroke="#ffe066" stroke-width="30" stroke-linecap="round" opacity="${aedF(W.current * .5)}"/>`
+      + `<path d="M${pr[0]} ${pr[1]}L${pl[0]} ${pl[1]}" stroke="#fff6c2" stroke-width="7" stroke-linecap="round" opacity="${aedF(W.current)}"/>`;
+  }
+  const pad = ([x, y, rot]) => `<rect x="${aedF(x - pw / 2)}" y="${aedF(y - ph / 2)}" width="${pw}" height="${ph}" rx="4" fill="#f7f5ee" stroke="${INK}" stroke-width="1.6" opacity=".96" transform="rotate(${rot} ${x} ${y})"/>`;
+  if (L.padsOn[0]) s += pad(pr);
+  if (L.padsOn[1]) s += pad(pl);
   return s;
 }
 function aedRipples(now, amt) {

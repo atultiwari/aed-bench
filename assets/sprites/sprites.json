@@ -293,5 +293,24 @@
       1215
     ],
     "stretch": 1.1353
+  },
+  "AED": {
+    "file": "AED.webp",
+    "frame": "B8",
+    "from": "B8 (AED and lid cut out; the helper is not in it)",
+    "x": -246.152,
+    "y": 122.979,
+    "width": 123.865,
+    "height": 73.021,
+    "px": [
+      759,
+      508
+    ],
+    "shockButton": [
+      -162.922,
+      150.721,
+      5.875,
+      3.162
+    ]
   }
 }

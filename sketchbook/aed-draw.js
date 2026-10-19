@@ -147,6 +147,15 @@ function aedPadsAndCables(L) {
   return s;
 }
 
+// pads and cables, when the picture does not already show them
+function aedPadsCode(L, lay) {
+  if (lay.people === 'B6' || lay.people === 'B6d' || lay.people === 'B7' || lay.people === 'B7d') return '';
+  const show = lay.people === 'A8' || L.key === 'shock' || L.key === 'next';
+  if (!show) return '';
+  let s = aedPadFlat([89, 180, 22]) + aedPadSide();
+  return s;
+}
+
 /* ---------- the AED ---------- */
 function aedLidCorners(open) {
   const a = AEDB, ang = open * 110 * Math.PI / 180, W = a.x1 - a.x0, H = a.lidH;
@@ -248,12 +257,12 @@ function aedTape(key, lit) {
 
 /* ---------- speech bubbles, the active ring, the timer, the shock, swap ---------- */
 function aedBubble(p3, text, accent) {
-  const k = INK_K, [X, Y] = P(...p3), fs = 9 * k, w = text.length * fs * .56 + fs * 1.6, h = fs * 2, bx = X - w * .3, by = Y - h - 12 * k;
+  const k = INK_K, [X, Y] = p3.length === 2 ? p3 : P(...p3), fs = 9 * k, w = text.length * fs * .56 + fs * 1.6, h = fs * 2, bx = X - w * .3, by = Y - h - 12 * k;
   return `<g class="bubble"><path d="M${f(X)} ${f(Y - 2 * k)}L${f(bx + w * .22)} ${f(by + h - 1)}L${f(bx + w * .4)} ${f(by + h - 1)}Z" fill="#fffdf6" stroke="${INK}" stroke-width="1.1"/>`
     + `<rect x="${f(bx)}" y="${f(by)}" width="${f(w)}" height="${f(h)}" rx="${f(h / 2)}" fill="${accent ? '#fff2c6' : '#fffdf6'}" stroke="${INK}" stroke-width="1.2"/>`
     + `<text x="${f(bx + w / 2)}" y="${f(by + h / 2 + fs * .36)}" font-size="${f(fs)}" text-anchor="middle" font-family="ui-rounded,system-ui,sans-serif" font-weight="700" fill="${INK}">${text}</text></g>`;
 }
-function aedRing(p3) { const [X, Y] = P(...p3);
+function aedRing(p3) { const [X, Y] = p3.length === 2 ? p3 : P(...p3);
   return `<circle cx="${f(X)}" cy="${f(Y)}" r="${f(15 * INK_K)}" fill="none" stroke="var(--accent,#f4b829)" stroke-width="2.6" stroke-dasharray="${f(4 * INK_K)} ${f(3 * INK_K)}"/>`; }
 function aedShockBolt(now) {
   const a = P(89, 180, 23), b = P(119.6, 166, 12), n = 7, pts = [];
@@ -277,6 +286,12 @@ function aedSwap(a3, b3) {
     + `<text x="${f(mx)}" y="${f(my + 2 * k)}" font-size="${f(9 * k)}" text-anchor="middle" font-family="ui-rounded,system-ui,sans-serif" font-weight="800" fill="${INK}">swap</text>`;
 }
 
+function aedSwap2(a, b) {
+  const k = INK_K, mx = (a[0] + b[0]) / 2, my = Math.min(a[1], b[1]) - 22 * k;
+  return `<path d="M${f(a[0])} ${f(a[1])}Q${f(mx)} ${f(my)} ${f(b[0])} ${f(b[1])}" fill="none" stroke="${INK}" stroke-width="1.6" stroke-dasharray="4 3"/>`
+    + `<text x="${f(mx)}" y="${f(my + 2 * k)}" font-size="${f(9 * k)}" text-anchor="middle" font-family="ui-rounded,system-ui,sans-serif" font-weight="800" fill="${INK}">swap</text>`;
+}
+
 /* ---------- where things are ---------- */
 function aedHandsA(L) {
   const top = 22 - 6 * L.dip + L.jerk * 3;
@@ -290,7 +305,7 @@ function aedHandsA(L) {
     default: return null;
   }
 }
-function aedAnchor(key, L, A, B) {
+function aedAnchor(key, L, A, B, lay) {
   const a = AEDB;
   switch (key) {
     case 'lid': return L.aedHere ? aedLidPoint(L.lid, 22, 22) : B.headAt;
@@ -298,16 +313,16 @@ function aedAnchor(key, L, A, B) {
     case 'shock': return [...a.shock, a.h + 2];
     case 'plug': return a.socket;
     case 'analyse': case 'next': return [...a.screen, a.h + 1];
-    case 'safe': return A.headAt;
+    case 'safe': return A.headAt2 || A.headAt;
     case 'call': return [...AED_PHONE, 2];
-    case 'helper': return B ? B.headAt : AED.STATIONS[AED.IDX.helper].at;
-    case 'clear': return B ? B.headAt : [26, 214, 70];
+    case 'helper': return B && B.headAt2 ? B.headAt2 : AED.STATIONS[AED.IDX.helper].at;
+    case 'clear': return B && B.headAt2 ? B.headAt2 : [26, 214, 70];
     default: return AED.STATIONS[AED.IDX[key]].at;
   }
 }
-function aedBubbleAt(who, A, B) {
-  if (who === 'A') return [A.headAt[0], A.headAt[1], A.headAt[2] + 10];
-  if (who === 'B') return B ? [B.headAt[0], B.headAt[1], B.headAt[2] + 10] : [26, 214, 90];
+function aedBubbleAt(who, A, B, lay) {
+  if (who === 'A') return A.headAt2 || [A.headAt[0], A.headAt[1], A.headAt[2] + 10];
+  if (who === 'B') return B && B.headAt2 ? B.headAt2 : [26, 214, 90];
   if (who === 'phone') return [...AED_PHONE, 4];
   if (who === 'mouth') return [100, 201, 26];
   return [AEDB.screen[0], AEDB.screen[1], AEDB.h + 18];
@@ -316,30 +331,35 @@ function aedBubbleAt(who, A, B) {
 /* ---------- the whole scene, back to front ---------- */
 function aedScene(st, now) {
   const L = aedLook(st, now), lit = st.busy || st.u > 0 ? L.key : '', F = AED_FLOOR, M = AED_MAT;
-  let s = board(F.x0, F.y0, F.x1, F.y1, 1.2, 6, AED_C.floor);
+  let s = `<defs><filter id="aedShadow" x="-10%" y="-10%" width="130%" height="130%" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="0 0 0 0 .2  0 0 0 0 .26  0 0 0 0 .4  0 0 0 1 0"/><feOffset dx="5" dy="3"/><feGaussianBlur stdDeviation="2.2"/></filter></defs>`;
+  s += board(F.x0, F.y0, F.x1, F.y1, 1.2, 6, AED_C.floor);
   for (let x = F.x0 + 24; x < F.x1; x += 24) s += line([[x, F.y0 + 1, 1.25], [x, F.y1 - 1, 1.25]], .45);
   s += box(M.x0, M.y0, 1.2, M.x1, M.y1, M.h, AED_C.mat, toneI, 1);
-  const sh = [castShadow(aedBoxPts(81, 20, 0, 119, 218, 20), M.h), castShadow(aedBoxPts(26, 152, 0, 66, 172, 60), M.h)];
-  if (L.aedHere) sh.push(castShadow(aedBoxPts(AEDB.x0, AEDB.y0, 0, AEDB.x1, AEDB.y1, AEDB.h), M.h));
-  if (L.B.show) sh.push(castShadow(aedBoxPts(L.B.pos[0] - 20, L.B.pos[1] - 12, 0, L.B.pos[0] + 6, L.B.pos[1] + 12, L.B.stand ? 90 : 50), M.h));
-  s += `<g opacity=".32">${sh.join('')}</g>`;
+
   // tapes lie under everything that stands
   Object.keys(AED_TAPES).forEach(k => { s += aedTape(k, lit === k); });
   if (L.scan >= 0) s += `<path d="${pd(on(PZ(M.h + .2), arcUV(100, 140, 130, -40, -40 + 360 * L.scan, 40)), false)}" fill="none" stroke="var(--accent,#f4b829)" stroke-width="2.4" stroke-dasharray="6 5"/>`;
-  // far to near: helper B, the AED, rescuer A, the person, then everyone's arms over the person
+  // the people are illustrations (aed-sprites.js); the code skeletons below are kept only as anchors
   const A = aedRescuer({ pos: AED.WORLD.rescuerA.knees, col: AED_C.A, hands: aedHandsA(L), look: L.A.look });
   const B = L.B.show ? aedRescuer({ pos: L.B.pos, col: AED_C.B, stand: L.B.stand, run: L.B.run, phase: now, hands: L.Bhands, carry: L.B.carry }) : null;
-  if (B) s += act('station', B.body + B.head, 'data-k="helper"');
-  if (L.aedHere) s += act('station', aedDevice(L, lit, now), 'data-k="aed"');
-  s += act('station', A.body + A.head, 'data-k="rescuerA"');
-  s += act('station', aedPatient(L), 'data-k="body"');
-  s += aedPadsAndCables(L) + A.arms + (B ? B.arms : '');
+  const lay = aedSpriteLayers(L, now), helper = lay.helper ? act('station', aedSpriteImg(lay.helper, { at: lay.helperAt, opacity: lay.fade }), `data-k="${AED_SPR_HAS_AED.has(lay.helper) ? 'aed' : 'helper'}"`) : '';
+  // soft shadows that follow each figure: the picture itself, darkened, blurred and nudged down-right on the floor
+  s += `<g opacity=".3" filter="url(#aedShadow)">${aedSpriteImg(lay.people)}${lay.a1 ? aedSpriteImg('A1') : ''}${lay.helper ? aedSpriteImg(lay.helper, { at: lay.helperAt }) : ''}</g>`;
+  if (lay.aedCode) s += act('station', aedSpriteAED(false), 'data-k="aed"');
+  if (!lay.front) s += helper + (lay.helper ? aedB8Cover(lay.helper, L.key) : '');
+  if (lay.a1) s += act('station', aedSpriteImg('A1'), 'data-k="rescuerA"');
+  s += act('station', aedSpriteImg(lay.people, { jerk: L.jerk }), 'data-k="body"');
+  s += aedPadsCode(L, lay);
+  if (lay.front) s += helper;
   s += act('station', aedPhone(L, now), 'data-k="phone"');
   if (L.flash > 0) s += aedShockBolt(now);
-  if (L.A.mode === 'handsup') s += aedBubble([A.headAt[0], A.headAt[1] - 20, A.headAt[2] + 38], 'Hands off', true);
+  const headA = aedSpriteTop(lay.people === 'P1' && lay.a1 ? 'A1' : lay.people), headB = lay.helper ? aedSpriteTop(lay.helper, { at: lay.helperAt }) : null;
+  A.headAt2 = headA; if (B) B.headAt2 = headB;
+  if (L.A.mode === 'handsup') s += aedBubble(headA, 'Hands off', true);
   if (L.airwayRing >= 0) s += aedTimer([100, 207, 30], L.airwayRing);
-  if (L.swap) s += aedSwap(A.headAt, B ? B.headAt : A.headAt);
-  if (lit) s += aedRing(aedAnchor(L.key, L, A, B));
-  if (L.bubble) s += aedBubble(aedBubbleAt(L.bubble.who, A, B), L.bubble.text, L.bubble.who === 'AED');
+  if (L.swap && headB) s += aedSwap2(headA, headB);
+  if (lit) s += aedRing(aedAnchor(L.key, L, A, B, lay));
+  if (L.bubble) s += aedBubble(aedBubbleAt(L.bubble.who, A, B, lay), L.bubble.text, L.bubble.who === 'AED');
+  if (lay.placeholder) s += `<text x="${f(P(100, 60, 0)[0])}" y="${f(P(100, 60, 0)[1] + 30)}" font-size="7" fill="#b3261e" font-family="ui-monospace,Menlo,monospace">placeholder: bare-chest CPR image pending</text>`;
   return { svg: s, L, A, B };
 }

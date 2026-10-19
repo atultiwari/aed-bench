@@ -187,13 +187,15 @@ function aedCam(anchor) {
     // frame the floor tightly (plus room above it for a standing helper and speech bubbles), at the element's shape
     const F = AED_FLOOR, pts = [];
     for (const x of [F.x0, F.x1]) for (const y of [F.y0, F.y1]) pts.push(P(x, y, 0));
-    pts.push(P(172, -4, 165), P(56, 162, 150), P(26, 214, 120));
+    const o = P(0, 0, 0);
+    for (const id of ['P1', 'A4', 'A8', 'B1', 'B5', 'B8', 'B6', 'B7']) { const [x, y, w, h] = AED_SPR[id]; pts.push([x + o[0], y + o[1]], [x + w + o[0], y + h + o[1]]); }
     const xs = pts.map(q => q[0]), ys = pts.map(q => q[1]);
     // on laptops the step buttons sit over the left of the figure, so the drawing keeps to the right 78%
     const room = aedIsPhone() ? 1 : .78, cw = (Math.max(...xs) - Math.min(...xs)) * 1.02, ch = (Math.max(...ys) - Math.min(...ys)) * 1.03;
-    const w = Math.max(cw / room, ch * aspect), h = w / aspect, my = (Math.max(...ys) + Math.min(...ys)) / 2;
+    const w = Math.max(cw / room, ch * aspect), h = w / aspect;
     const x = room < 1 ? Math.max(...xs) + w * .01 - w : (Math.max(...xs) + Math.min(...xs)) / 2 - w / 2;
-    aedVB0 = { x, y: my - h / 2, w, h, aspect };
+    // anchor the top: standing heads must never be cut; spare height goes below the floor
+    aedVB0 = { x, y: Math.min(...ys) - ch * .02, w, h, aspect };
     if (!aedVB) aedVB = { ...aedVB0 };
   }
   let target = aedVB0;
