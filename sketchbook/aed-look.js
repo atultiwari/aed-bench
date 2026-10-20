@@ -101,7 +101,7 @@ function aedLook(st, now) {
   if (here('analyse')) say('AED', '"Do not touch the patient"', .1);
   if (here('clear')) say('B', '"Everyone clear!"', .2);
   if (here('chest2')) say('AED', '"Start CPR now"', 0, .22);
-  // no '2 breaths' bubble after the shock: the CHEST 17 pictures show only compressions, nobody at the mouth
+  if (here('chest2') && L.breath && u > .22) L.bubble = { who: 'mouth', text: '2 breaths' };
   if (here('next')) say('AED', '"Stop CPR. Analysing."', .1);
   L.scan = here('safe') ? u : -1;
   L.airwayRing = here('airway') ? aedSeg(u, .4, 1) : -1;

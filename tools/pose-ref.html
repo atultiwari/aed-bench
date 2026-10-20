@@ -32,6 +32,8 @@ const SPRITES = {
   P2: { frame: 'patient', people: [['patient', { tilt: 1 }]], opt: { shirtOpen: 0 } },
   P3: { frame: 'patient', people: [['patient', {}]], opt: { shirtOpen: 1 } },
   // Rescuer A kneels on the far side, level with the lower sternum (knees at x 60, y 150)
+  // ERC 2025 Fig. 7 "Safety": Rescuer A standing beside him, a step back, looking round for danger before kneeling
+  A0: { frame: 'fit', people: [['raw', { who: 'A', mode: 'stand', at: [38, 156], facing: [1, 0, 0], look: { yaw: 35, pitch: 0 } }]], opt: {} },
   A1: { frame: 'A', people: [['A_kneel', { at: [60, 150], look: { yaw: 0, pitch: 28 } }]], opt: {} },
   // ERC 2025 Fig. 7 "Response": shake the shoulders gently, ask loudly. Hands on both of his shoulders.
   A2: { frame: 'A', people: [['raw', { who: 'A', mode: 'kneel', at: [70, 162], facing: [1, 0, 0], look: { pitch: 30 },

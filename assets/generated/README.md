@@ -56,3 +56,9 @@ redrawn by GPT Image 2.5 with the cast sheet (01), then registered by `tools/reg
 | **C17d** (code) | C17 with her shoulders pushed down 32 px over fixed hands | - |
 | **B5on** | Helper B pressing the green ON button (screen just lit, shock button unlit); edit of B5, same pose and framing | 71f1dfd8-4f40-4b90-b608-8a5324b888b5 |
 | **B5idle** | Helper B kneeling at the AED, hands on thighs, not touching it, looking at the patient; edit of B5on, aligned by the AED | c6ab2628-690d-45ca-a351-928ca0060420 |
+| **A0** | Rescuer A standing beside him, head turned, checking the scene is safe before kneeling (ERC Fig. 7 "Safety"); used at START and SAFE? | dd4ba32f-462f-4af0-bf3e-7f046a02e1ca (refs: pose ref media 80f8fc2d-0466-4749-b3ab-03f7d44e93e2, cast sheet 01) |
+| **A3l → A3** | Breathing check, look-listen-feel: hands as in A3c (forehead, chin lift), her cheek just above his mouth and nose, eyes along his chest. Edit of A3c; replaces A3 | e77ab821-a110-43b2-bbd1-a67d64a72c87 (ref A3c job) |
+| **C17b** | Station 17 rescue breaths after the shock: A7's breath (nose pinched, chin lifted, mouth sealed) with the chest bare and both pads on, as in C17. Edit of A7c with C17c as reference; the model's own cables removed (the page draws them), aligned to P3 by the legs (overlap 0.91) | 8a78d6f4-8aab-4438-ac14-cc9dece7c232 (refs A7c and C17c jobs) |
+
+**Hair (no credits):** the models drew the patient's hair from grey to navy-black. `tools/match_hair.py` maps it in every
+patient sprite onto P1's salt-and-pepper grey, the cast sheet's.

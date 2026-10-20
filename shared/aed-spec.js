@@ -71,11 +71,11 @@
   /* ---------- the 7 steps (one button each) ---------- */
   const STEPS = [
     { label: 'Check and call', path: ['safe', 'shoulders', 'call', 'airway', 'helper'],
-      note: 'Make sure it is safe, shake and shout. No answer: call for an ambulance on speaker straight away (in India 108 or 112), then tilt the head and look for normal breathing for up to 10 s. Gasping is not normal breathing: it is a sign of cardiac arrest. Send someone for the AED.',
+      note: 'Make sure it is safe, shake and shout. No answer: call 108 or 112 on speaker straight away, or ask someone with you to call while you stay with the person (ERC Fig. 7). Then tilt the head and look for normal breathing for up to 10 s. Gasping is not normal breathing: it is a sign of cardiac arrest. Send someone for the AED.',
       done: 'Unresponsive, not breathing normally: cardiac arrest. Help and an AED are coming.',
       clinician: 'Healthcare professionals may check a carotid pulse at the same time, for no more than 10 s; if no definite pulse, treat as cardiac arrest. (AHA-P7 Recognition #2)' },
     { label: 'Start CPR', path: ['chest1'],
-      note: 'Heel of the hand on the lower half of the breastbone, other hand on top, arms straight. Push 5-6 cm deep, 100-120 a minute, let the chest come all the way up. If trained: 30 pushes, 2 breaths. If not: keep pushing without stopping. Alone? Fetch an AED only if you can have it on within 1 minute.',
+      note: 'Kneel beside the chest. Heel of one hand on the lower half of the breastbone, other hand on top, fingers interlocked, arms straight, shoulders above your hands. Push 5-6 cm deep, 100-120 a minute, let the chest come all the way up. If trained: 30 pushes, 2 breaths. If not: keep pushing without stopping. Alone? Fetch an AED only if you can have it on within 1 minute.',
       done: 'Blood is being pushed to the brain while the AED is on its way.',
       clinician: 'Breaths over about 1 s each, just enough for visible chest rise; pause no more than 10 s for two breaths. (ERC-BLS Fig. 7; AHA-P7 Ventilation #2, #4)' },
     { label: 'Open and switch on', path: ['lid', 'power'],
@@ -83,6 +83,7 @@
       done: 'The AED is on and giving spoken instructions.' },
     { label: 'Attach the pads', path: ['bare', 'pad1', 'pad2', 'plug'],
       note: 'Bare the chest (move clothing or a bra; modesty comes second). Peel each pad and press it on bare skin exactly where the picture on the pad shows: one below the right collarbone, one on the left side below the armpit. A keeps pushing around B\'s hands.',
+      more: 'Wet chest: wipe it dry. Medicine patch where a pad goes: peel it off and wipe the skin. Very hairy chest: shave the pad sites only if the pads will not stick, without delaying the shock. A bump under the collarbone (pacemaker or ICD): keep the pad at least 8 cm away from it. (ERC-ALS 2025 "Pad position"; wet chest and patches: typical, AED makers\' instructions)',
       done: 'Pads on, plugged in. The AED can now see the heart.' },
     { label: 'Analyse: hands off', path: ['analyse'],
       note: 'The AED says "Analysing, do not touch the patient". A lifts both hands. Any movement can confuse the analysis.',
@@ -93,7 +94,7 @@
       done: 'Shock delivered.',
       clinician: 'Pre- and post-shock pauses should be as short as possible (AHA-P7 Pauses #1). With a manual defibrillator, ERC-ALS aims for an interruption under 5 s; an AED\'s own analysis and charge set the pause here.' },
     { label: 'Resume CPR at once', path: ['chest2', 'next'],
-      note: 'Straight back to compressions: don\'t feel for a pulse, don\'t wait. Even a successful shock leaves a heart that cannot pump well for a while, often for more than 2 minutes. After 2 minutes the AED will ask to analyse again; swap who is pushing. Keep going until help takes over, or the person wakes, moves, opens their eyes and breathes normally.',
+      note: 'Straight back to compressions: don\'t feel for a pulse, don\'t wait. Even a successful shock leaves a heart that cannot pump well for a while, often for more than 2 minutes. After 2 minutes the AED will ask to analyse again; swap who is pushing. Keep going until a healthcare professional takes over or tells you to stop, the person is definitely waking up (moving, opening their eyes and breathing normally), or you are exhausted (ERC Fig. 7).',
       done: 'CPR running. Next analysis in 2 minutes.',
       clinician: 'No post-shock rhythm or pulse check; resume compressions immediately. (AHA-P7 Pauses #3; ERC-ALS)' },
   ].map(s => Object.freeze(s));

@@ -377,10 +377,10 @@ function aedScene(st, now) {
   const B = L.B.show ? aedRescuer({ pos: L.B.pos, col: AED_C.B, stand: L.B.stand, run: L.B.run, phase: now, hands: L.Bhands, carry: L.B.carry }) : null;
   const lay = aedSpriteLayers(L, now), helper = lay.helper ? act('station', aedSpriteImg(lay.helper, { at: lay.helperAt, opacity: lay.fade }), `data-k="${AED_SPR_HAS_AED.has(lay.helper) ? 'aed' : 'helper'}"`) : '';
   // soft shadows that follow each figure: the picture itself, darkened, blurred and nudged down-right on the floor
-  s += `<g opacity=".3" filter="url(#aedShadow)">${aedSpriteImg(lay.people)}${lay.a1 ? aedSpriteImg('A1') : ''}${lay.helper ? aedSpriteImg(lay.helper, { at: lay.helperAt }) : ''}</g>`;
+  s += `<g opacity=".3" filter="url(#aedShadow)">${aedSpriteImg(lay.people)}${lay.solo ? aedSpriteImg(lay.solo) : ''}${lay.helper ? aedSpriteImg(lay.helper, { at: lay.helperAt }) : ''}</g>`;
   if (lay.aedCode) s += act('station', aedSpriteAED(false), 'data-k="aed"');
   if (!lay.front) s += helper + (lay.helper ? aedB8Cover(lay.helper, L.key) : '') + (lay.helper === 'B5idle' && !L.on ? aedScreenOff() : '');
-  if (lay.a1) s += act('station', aedSpriteImg('A1'), 'data-k="rescuerA"');
+  if (lay.solo) s += act('station', aedSpriteImg(lay.solo), 'data-k="rescuerA"');
   s += act('station', aedSpriteImg(lay.people, { jerk: L.jerk }), 'data-k="body"');
   s += aedPadsSprite(L, lay);
   if (lay.front) s += helper;
@@ -388,7 +388,7 @@ function aedScene(st, now) {
   const pads = AED_PADS[lay.people] || [];
   if (L.flash > 0 && pads.length === 2) s += aedShockBolt2(aedAt(pads[0]), aedAt(pads[1]), now);
   const hd = AED_HEAD[lay.people] || {}, hb = lay.helper && AED_HEAD[lay.helper] ? AED_HEAD[lay.helper].B : null;
-  const headA = lay.a1 ? aedAt(AED_HEAD.A1.A) : hd.A ? aedAt(hd.A) : aedSpriteTop(lay.people);
+  const headA = lay.solo ? aedAt(AED_HEAD[lay.solo].A) : hd.A ? aedAt(hd.A) : aedSpriteTop(lay.people);
   const headB = hd.B ? aedAt(hd.B) : hb ? aedAt(hb) : lay.helper ? aedSpriteTop(lay.helper, { at: lay.helperAt }) : null;
   A.headAt2 = headA; if (B) B.headAt2 = headB;
   if (L.A.mode === 'handsup') s += aedBubble(headA, 'Hands off', true);
