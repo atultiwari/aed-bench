@@ -159,7 +159,7 @@ function aedPadsCode(L, lay) {
 // pads in pictures that do not show them (A8), and the cables from the pads to the AED's socket
 function aedPadsSprite(L, lay) {
   const pads = AED_PADS[lay.people];
-  const showPads = pads && (L.key === 'analyse' || L.key === 'clear' || L.key === 'shock' || L.key === 'next' || L.key === 'plug' || L.key === 'chest2' || (L.key === 'pad2' && L.u > .5));
+  const showPads = pads && (L.key === 'analyse' || L.key === 'clear' || L.key === 'shock' || L.key === 'next' || L.key === 'plug' || L.key === 'chest2');   // cables appear at PLUG, not before
   if (!pads) return '';
   let s = '';
   if (L.aedHere && showPads) {

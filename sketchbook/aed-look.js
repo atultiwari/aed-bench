@@ -93,7 +93,7 @@ function aedLook(st, now) {
   L.bubble = null;
   const say = (who, text, a = .08, b = .95) => { if (u >= a && u <= b) L.bubble = { who, text }; };
   if (here('shoulders')) say('A', '"Are you all right?"');
-  if (here('call')) say('phone', '"Ambulance please: collapsed, not breathing normally"', .2);
+  if (here('call')) say('phone', '"Ambulance please: an adult has collapsed and is not responding"', .2);
   if (here('airway')) say('A', 'Gasping is not normal breathing', .45);
   if (here('helper')) say('A', '"Get the AED!"', .05, .6);
   if (here('chest1') && L.breath) L.bubble = { who: 'mouth', text: '2 breaths' };
@@ -101,7 +101,7 @@ function aedLook(st, now) {
   if (here('analyse')) say('AED', '"Do not touch the patient"', .1);
   if (here('clear')) say('B', '"Everyone clear!"', .2);
   if (here('chest2')) say('AED', '"Start CPR now"', 0, .22);
-  if (here('chest2') && L.breath && u > .22) L.bubble = { who: 'mouth', text: '2 breaths' };
+  // no '2 breaths' bubble after the shock: the CHEST 17 pictures show only compressions, nobody at the mouth
   if (here('next')) say('AED', '"Stop CPR. Analysing."', .1);
   L.scan = here('safe') ? u : -1;
   L.airwayRing = here('airway') ? aedSeg(u, .4, 1) : -1;

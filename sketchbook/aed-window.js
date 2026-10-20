@@ -48,7 +48,7 @@ function aedDrawWindow(L, now) {
    sternum with its apex at the left 5th intercostal space; pad 1 below the right collarbone beside the sternum,
    pad 2 on the left mid-axillary line (ERC 2025 Fig. 6a). */
 const AED_WIN_GEO = {
-  chest: [75, 2, 250, 196], heart: [174.9, 52.7, 57.8, 94], pad1: [164.7, 75, -10], pad2: [264.3, 139.6, 8], padWH: [32.5, 43],
+  chest: [75, 2, 250, 196], heart: [174.9, 52.7, 57.8, 94], pad1: [164.7, 75, -10], pad2: [273, 129, 6], padWH: [32.5, 43],
   aorta: [[210, 58], [234, 46]], cava: [[181, 40], [181, 58]],
 };
 function aedChest(L, now) {
