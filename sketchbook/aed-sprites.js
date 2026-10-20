@@ -25,7 +25,7 @@ const AED_SPR_AT = { B2: [158, -10, 0], B3: [158, -10, 0], B4: [10, 290, 0] };
 const AED_SPR_HAS_AED = new Set(['B5', 'B5on', 'B5idle', 'B8']);
 // the B8 sprite shows the shock button lit: true only from 'shock advised' until the shock
 const AED_SPR_LIT_OK = new Set(['clear']);
-const AED_SPR_PADS = { B6: [1], B6d: [1], B7: [1, 2], B7d: [1, 2], C17: [1, 2], C17d: [1, 2], C17b: [1, 2] };
+const AED_SPR_PADS = { B6: [1], B6d: [1], B7: [1, 2], B7d: [1, 2], C17: [1], C17d: [1], C17b: [1] };   // pad 2 is drawn by code in C17/C17b (the pictures had it too low)
 
 /* which sprites a moment shows: { people: id, helper: id|null, helperAt: [x,y,z]|null, aedCode: bool } */
 function aedSpriteLayers(L, now) {
@@ -64,16 +64,33 @@ function aedSpriteLayers(L, now) {
 }
 
 /* an <image> for a sprite, shifted (in world cm) from where it was posed */
-// the open AED on its own (when nobody kneels at it), with the shock button dark unless a shock is advised
-function aedSpriteAED(lit) {
-  const o = P(0, 0, 0), [x, y, rx, ry] = AED_SPR_SHOCK;
-  return aedSpriteImg('AED') + (lit ? '' : `<ellipse cx="${f(x + o[0])}" cy="${f(y + o[1])}" rx="${f(rx * 1.05)}" ry="${f(ry * 1.15)}" fill="#e2780c" stroke="#7a3a06" stroke-width=".5"/>`);
+// the AED/B8 picture shows the shock button lit, with a glow. Until "shock advised" it is covered: the grey panel
+// over the glow, then a plain orange button (scene units, measured on tools/sprite_grid.py AED)
+function aedShockUnlit() {
+  const o = P(0, 0, 0), [x, y, rx, ry] = AED_SPR_SHOCK, X = x + o[0], Y = y + o[1];
+  return `<ellipse cx="${f(X)}" cy="${f(Y + .4)}" rx="${f(rx * 1.45)}" ry="${f(ry * 1.75)}" fill="#545150"/>`
+    + `<ellipse cx="${f(X)}" cy="${f(Y + .9)}" rx="${f(rx)}" ry="${f(ry)}" fill="#a8520c" stroke="#5a2c06" stroke-width=".5"/>`
+    + `<ellipse cx="${f(X)}" cy="${f(Y)}" rx="${f(rx)}" ry="${f(ry)}" fill="#e2780c" stroke="#5a2c06" stroke-width=".5"/>`;
+}
+// the AED/B8 picture's screen (dark in the picture): lit green once the AED is switched on
+const AED_SPR_SCREEN = [[-196, 142.5], [-165.5, 128.3], [-151.3, 135.8], [-180.3, 150.3]];
+function aedScreenLit(d = [0, 0]) {
+  const o = P(0, 0, 0);
+  return `<path d="M${AED_SPR_SCREEN.map(([x, y]) => f(x + o[0] + d[0]) + ' ' + f(y + o[1] + d[1])).join('L')}Z" fill="#9be8b4" stroke="#1d3a2a" stroke-width=".5" opacity=".95"/>`;
+}
+// the open AED on its own (when nobody kneels at it): screen lit once on, shock button unlit unless a shock is advised
+function aedSpriteAED(lit, on) {
+  return aedSpriteImg('AED') + (on ? aedScreenLit() : '') + (lit ? '' : aedShockUnlit());
+}
+// B8 and B5 drew the AED's screen dark: light it whenever the AED is on (B5's AED sits AED_B5_SHIFT from B8's)
+function aedHelperScreen(id, on) {
+  if (!on) return '';
+  return id === 'B8' ? aedScreenLit() : id === 'B5' ? aedScreenLit(AED_B5_SHIFT) : '';
 }
 // the B8 sprite at moments when its shock button must not be lit
 function aedB8Cover(id, key) {
   if (id !== 'B8' || AED_SPR_LIT_OK.has(key)) return '';
-  const o = P(0, 0, 0), [x, y, rx, ry] = AED_SPR_SHOCK;
-  return `<ellipse cx="${f(x + o[0])}" cy="${f(y + o[1])}" rx="${f(rx * 1.05)}" ry="${f(ry * 1.15)}" fill="#e2780c" stroke="#7a3a06" stroke-width=".5"/>`;
+  return aedShockUnlit();
 }
 // B5idle's screen outline (scene units): darkened while the AED is still off (the LID station, before ON)
 const AED_SPR_IDLE_SCREEN = [[-178.6, 147.6], [-161.3, 138.4], [-153.1, 143.2], [-170.6, 152.5]];
@@ -117,8 +134,10 @@ const AED_HEAD = {
 // the patient's mouth, per people sprite (for the '2 breaths' bubble)
 const AED_MOUTH = { A3: [-78, 93], A7: [-84, 90], A5: [-92, 113], A6: [-92, 113], C17: [-88, 106], C17d: [-88, 106], C17b: [-81, 84] };
 // the pads on the patient, per people sprite: [x, y] centres. Sprites that show pads list them; A8 needs them drawn
-const AED_PADS = { B6: [[-75, 97]], B6d: [[-75, 97]], B7: [[-70, 107], [-19, 115]], B7d: [[-70, 107], [-19, 115]],
-  C17: [[-62, 92], [-17, 97]], C17d: [[-62, 92], [-17, 97]], C17b: [[-59, 96], [-15, 105]], A8: [[-50, 94], [-1, 101]] };
+const AED_PADS = { B6: [[-75, 97]], B6d: [[-75, 97]], B7: [[-70, 107], [-27, 119]], B7d: [[-70, 107], [-27, 119]],
+  C17: [[-62, 92], [-32, 104.5]], C17d: [[-62, 92], [-32, 104.5]], C17b: [[-59, 96], [-32, 108]],
+  // pad 2 on the left mid-axillary line at nipple level (the left nipple is at about (-32, 103) in A8)
+  A8: [[-50, 94], [-28, 108]] };
 // the AED's screen and its near-face socket, in the AED/B8 picture; the B5 family's AED sits 7 right, 4 down
 const AED_AED = { screen: [-177, 134], socket: [-150, 163] }, AED_B5_SHIFT = [7, 4];
 const aedAt = ([x, y]) => { const o = P(0, 0, 0); return [x + o[0], y + o[1]]; };

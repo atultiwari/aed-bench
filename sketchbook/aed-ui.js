@@ -167,7 +167,7 @@ function aedSyncPanel() {
   chip.classList.toggle('busy', st.busy);
   const handsOff = AED.handsOffUntil(clock), comps = AED.compressionsUntil(clock, st.mode);
   document.getElementById('aedReads').innerHTML = `<span><b>Step</b>${Math.min(st.step + (st.busy ? 1 : 0), AED.STEPS.length)} / ${AED.STEPS.length}</span><span><b>Clock</b>${AED.mmss(clock)} / ${AED.mmss(AED.TOTAL)}</span>`
-    + `<span><b>Compressions</b>${comps}</span><span><b>Hands off</b>${AED.mmss(handsOff)}</span>`
+    + `<span><b>Compressions</b>${comps}</span><span><b>Hands off for the AED</b>${AED.mmss(handsOff)}</span>`
     + `<span><b>Rate</b>${AED.NUM.rate}/min · ${AED.NUM.depthCm.join('-')} cm</span>`;
   document.querySelectorAll('#btns .act').forEach((b, i) => {
     b.classList.toggle('done', i < st.step && i < AED.STEPS.length);

@@ -7,8 +7,8 @@ const AED_HEART = {
   'vf+cpr': { ripple: 1, arrows: 1, current: 0, cap: 'Still quivering, but each push squeezes blood out' },
   'paused-vf': { ripple: 1, arrows: 0, current: 0, cap: 'Hands off: quivering, no blood moving' },
   current: { ripple: 0, arrows: 0, current: 1, cap: 'Shock: current through the whole heart at once' },
-  'stunned+cpr': { ripple: 0, arrows: 1, current: 0, cap: 'Quivering stopped. Pushes keep blood moving' },
-  stunned: { ripple: 0, arrows: 0, current: 0, cap: 'Quivering stopped; not pumping well yet' },
+  'stunned+cpr': { ripple: 0, arrows: 1, current: 0, cap: 'This time the shock stopped the quivering. Pushes keep blood moving' },
+  stunned: { ripple: 0, arrows: 0, current: 0, cap: 'Quivering stopped (it can return); not pumping well yet' },
 };
 const AED_WIN = { ripple: 1, arrows: 0, current: 0, hist: Array(240).fill(0), last: 0, spikeAt: -9, kind: 'none' };
 const AED_CHEST_PATH = 'M150 12L250 12Q256 28 290 32L340 46Q358 54 354 82L334 192L66 192L46 82Q42 54 60 46L110 32Q144 28 150 12Z';
@@ -48,7 +48,7 @@ function aedDrawWindow(L, now) {
    sternum with its apex at the left 5th intercostal space; pad 1 below the right collarbone beside the sternum,
    pad 2 on the left mid-axillary line (ERC 2025 Fig. 6a). */
 const AED_WIN_GEO = {
-  chest: [75, 2, 250, 196], heart: [174.9, 52.7, 57.8, 94], pad1: [164.7, 75, -10], pad2: [273, 129, 6], padWH: [32.5, 43],
+  chest: [75, 2, 250, 196], heart: [174.9, 52.7, 57.8, 94], pad1: [164.7, 75, -10], pad2: [283, 131, 5], padWH: [32.5, 43],
   aorta: [[210, 58], [234, 46]], cava: [[181, 40], [181, 58]],
 };
 function aedChest(L, now) {

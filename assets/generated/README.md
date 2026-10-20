@@ -62,3 +62,8 @@ redrawn by GPT Image 2.5 with the cast sheet (01), then registered by `tools/reg
 
 **Hair (no credits):** the models drew the patient's hair from grey to navy-black. `tools/match_hair.py` maps it in every
 patient sprite onto P1's salt-and-pepper grey, the cast sheet's.
+| B7e | Edit asking to move pad 2 toward the head: moved it toward the feet and the midline instead. **Rejected** | 164cbf66-99a2-425c-a927-501b91ef45f6 |
+| **B7f → B7c → B7, B7d** | Pad 2 corrected (audit 2026-10-21: the first B7c had it about 13 cm too low, near the costal margin). Edit of B7c with a marked-up copy (refs/B7-target.png, media 2e03a8e2-b4b8-4c4c-a0e3-670e0860850a) showing the target box: the pad now sits on the left mid-axillary line just below nipple level (V6). The old image is kept as B7c-lowpad.png; B7d rebuilt from it by make_push_frame.py | 6c8777ee-3923-4563-bc36-05625800681d |
+
+**Pad 2 in C17, C17d, C17b (no credits):** these pictures also drew pad 2 too low. `tools/erase_pad.py` removes it from
+the picture and the page draws it at the corrected site (sketchbook/aed-sprites.js, AED_PADS).

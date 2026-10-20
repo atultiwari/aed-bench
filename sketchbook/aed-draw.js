@@ -170,10 +170,10 @@ function aedPadsSprite(L, lay) {
         + `<path d="M${f(a[0])} ${f(a[1])}Q${f(mid[0])} ${f(mid[1])} ${f(end[0])} ${f(end[1])}" fill="none" stroke="#e98a3c" stroke-width=".8" stroke-linecap="round"/>`; });
     if (!plugIn) { const e = [sock[0] + 14, sock[1] + 6]; s += `<rect x="${f(e[0] - 2.5)}" y="${f(e[1] - 1.8)}" width="5" height="3.6" rx=".8" fill="#3d3935" stroke="${INK}" stroke-width=".5"/>`; }
   }
-  if (lay.people === 'A8') {         // A8 shows the bare chest without pads: draw them where C17/B7 show them
-    const pad = ([x, y], rot) => { const [X, Y] = aedAt([x, y]); return `<rect x="${f(X - 4.6)}" y="${f(Y - 3.4)}" width="9.2" height="6.8" rx="1.2" fill="#f7f5ee" stroke="${INK}" stroke-width=".6" transform="rotate(${rot} ${f(X)} ${f(Y)})"/>`; };
-    s += pad(pads[0], -28) + pad(pads[1], 20);
-  }
+  // pads the picture does not show (A8 has none; C17/C17b lost pad 2, which their pictures drew too low)
+  const inImage = AED_SPR_PADS[lay.people] || [];
+  const pad = ([x, y], rot) => { const [X, Y] = aedAt([x, y]); return `<rect x="${f(X - 4.6)}" y="${f(Y - 3.4)}" width="9.2" height="6.8" rx="1.2" fill="#f7f5ee" stroke="${INK}" stroke-width=".6" transform="rotate(${rot} ${f(X)} ${f(Y)})"/>`; };
+  if (showPads || lay.people === 'A8') pads.forEach((p, i) => { if (!inImage.includes(i + 1)) s += pad(p, i ? 20 : -28); });
   return s;
 }
 function aedShockBolt2(a, b, now) {
@@ -378,8 +378,8 @@ function aedScene(st, now) {
   const lay = aedSpriteLayers(L, now), helper = lay.helper ? act('station', aedSpriteImg(lay.helper, { at: lay.helperAt, opacity: lay.fade }), `data-k="${AED_SPR_HAS_AED.has(lay.helper) ? 'aed' : 'helper'}"`) : '';
   // soft shadows that follow each figure: the picture itself, darkened, blurred and nudged down-right on the floor
   s += `<g opacity=".3" filter="url(#aedShadow)">${aedSpriteImg(lay.people)}${lay.solo ? aedSpriteImg(lay.solo) : ''}${lay.helper ? aedSpriteImg(lay.helper, { at: lay.helperAt }) : ''}</g>`;
-  if (lay.aedCode) s += act('station', aedSpriteAED(false), 'data-k="aed"');
-  if (!lay.front) s += helper + (lay.helper ? aedB8Cover(lay.helper, L.key) : '') + (lay.helper === 'B5idle' && !L.on ? aedScreenOff() : '');
+  if (lay.aedCode) s += act('station', aedSpriteAED(L.shockReady, L.on), 'data-k="aed"');
+  if (!lay.front) s += helper + (lay.helper ? aedHelperScreen(lay.helper, L.on) + aedB8Cover(lay.helper, L.key) : '') + (lay.helper === 'B5idle' && !L.on ? aedScreenOff() : '');
   if (lay.solo) s += act('station', aedSpriteImg(lay.solo), 'data-k="rescuerA"');
   s += act('station', aedSpriteImg(lay.people, { jerk: L.jerk }), 'data-k="body"');
   s += aedPadsSprite(L, lay);
