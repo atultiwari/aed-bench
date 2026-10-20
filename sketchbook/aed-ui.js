@@ -92,7 +92,7 @@ const AED_CSS = `
     #fig{max-height:calc(100vh - 250px)}
     .player{grid-column:1;grid-row:4}
     .scope-panel{grid-column:2;grid-row:3 / span 2;padding-bottom:64px}
-    .scope-panel .win svg{max-height:calc(100vh - 640px);min-height:150px}
+    .scope-panel .win svg{max-height:calc(100vh - 668px);min-height:150px}
     .aed-footer{grid-column:1 / 3;grid-row:5}
     header,.stage,#fig,.player,.scope-panel,.aed-footer{max-width:none!important}
     header h1{font-size:20px}
